@@ -1,10 +1,8 @@
 import express from "express";
-import { createUser, getUserInfo } from "./queries";
-import { body, validationResult } from "express-validator"
-import { error } from "console";
 import createUserRouter from "../routes/userRoutes"
 
 import getUserRouter from "../routes/userRoutes"
+import createTweetRouter from "../routes/tweetRoutes"
 
 import cors from 'cors';
 
@@ -21,6 +19,9 @@ app.use(cors())
 app.use("/api", createUserRouter)
 // route:2 --> get user
 app.use("/api", getUserRouter)
+
+// routes:3 --> create tweet
+app.use("/api", createTweetRouter)
 
 app.get("/", async (req, res) => {
     res.send("hi homepage ")

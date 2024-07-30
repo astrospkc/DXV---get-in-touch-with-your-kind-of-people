@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { body, validationResult } from "express-validator";
-import { createUser, getUserInfo } from '../db/queries';
+import { createUser, getUserInfo } from '../db/queries'
 import { db } from '../db/db';
 
 // import bcrypt from 'bcryptjs'
@@ -11,6 +11,7 @@ const router = express.Router()
 // const JWT_SECRET = "secret"
 
 async function createUserInfo(req: express.Request, res: express.Response) {
+    console.log(req.body)
     const { name, username, email, password } = req.body;
 
     if (!name || !username || !email || !password) {

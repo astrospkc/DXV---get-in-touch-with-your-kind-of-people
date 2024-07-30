@@ -6,3 +6,5 @@ npm is used for managing dependencies in a project, while npx is used for execut
 
 install this package:
 npm install express @supabase/supabase-js bcryptjs jsonwebtoken express-validator
+
+npm run dev -> command for localhost

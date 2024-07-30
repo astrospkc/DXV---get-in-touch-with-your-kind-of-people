@@ -22,3 +22,8 @@ export async function createTweet(data: InsertTweet) {
     console.log("data: ", data)
     return data;
 }
+
+export async function getTweet(userId: Number) {
+    console.log("userId: ", userId)
+    return await db.select().from(tweetTable).where(eq(tweetTable.user_id, userId)).limit(1).execute();
+}

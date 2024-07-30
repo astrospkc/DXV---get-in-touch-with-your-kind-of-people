@@ -3,6 +3,8 @@ import createUserRouter from "../routes/userRoutes"
 
 import getUserRouter from "../routes/userRoutes"
 import createTweetRouter from "../routes/tweetRoutes"
+import getTweetRouter from "../routes/tweetRoutes"
+
 
 import cors from 'cors';
 
@@ -22,6 +24,14 @@ app.use("/api", getUserRouter)
 
 // routes:3 --> create tweet
 app.use("/api", createTweetRouter)
+
+// routes:4 -->get tweet
+app.use("/api", getTweetRouter)
+
+
+
+
+
 
 app.get("/", async (req, res) => {
     res.send("hi homepage ")

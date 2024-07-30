@@ -6,6 +6,8 @@ import createTweetRouter from "../routes/tweetRoutes"
 import getTweetRouter from "../routes/tweetRoutes"
 import createPostRouter from "../routes/postRoutes"
 import getPostRouter from "../routes/postRoutes"
+import createGroupRouter from "../routes/postRoutes"
+
 
 
 
@@ -37,6 +39,10 @@ app.use("/api", createPostRouter)
 
 // routes:6 --> get post
 app.use("/api", getPostRouter)
+
+
+// routes:6 --> create a group
+app.use("/api", createGroupRouter)
 
 
 

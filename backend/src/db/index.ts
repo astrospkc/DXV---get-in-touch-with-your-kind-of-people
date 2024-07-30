@@ -4,6 +4,10 @@ import createUserRouter from "../routes/userRoutes"
 import getUserRouter from "../routes/userRoutes"
 import createTweetRouter from "../routes/tweetRoutes"
 import getTweetRouter from "../routes/tweetRoutes"
+import createPostRouter from "../routes/postRoutes"
+import getPostRouter from "../routes/postRoutes"
+
+
 
 
 import cors from 'cors';
@@ -27,6 +31,12 @@ app.use("/api", createTweetRouter)
 
 // routes:4 -->get tweet
 app.use("/api", getTweetRouter)
+
+// routes:5 --> create post
+app.use("/api", createPostRouter)
+
+// routes:6 --> get post
+app.use("/api", getPostRouter)
 
 
 

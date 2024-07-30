@@ -1,5 +1,5 @@
 import { db } from './db';
-import { InsertPost, InsertTweet, InsertUser, postsTable, tweetTable, usersTable } from './schema';
+import { groupTable, InsertGroup, InsertPost, InsertTweet, InsertUser, postsTable, tweetTable, usersTable } from './schema';
 import { eq } from 'drizzle-orm';
 
 // user queries: 
@@ -41,4 +41,12 @@ export async function createPost(data: InsertPost) {
 export async function getPost(userId: Number) {
     console.log("userId: ", userId)
     return await db.select().from(postsTable).where(eq(postsTable.userId, userId)).limit(1).execute()
+}
+
+// create a group
+
+export async function createGroup(data: InsertGroup) {
+    console.log("group data: ", data)
+    await db.insert(groupTable).values(data);
+    return data
 }

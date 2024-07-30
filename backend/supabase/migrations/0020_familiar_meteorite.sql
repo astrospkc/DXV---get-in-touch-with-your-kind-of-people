@@ -1,0 +1,1 @@
+ALTER TABLE "group_table" ADD CONSTRAINT "group_table_group_name_unique" UNIQUE("group_name");

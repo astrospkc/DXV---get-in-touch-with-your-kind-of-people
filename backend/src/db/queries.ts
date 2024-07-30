@@ -11,6 +11,7 @@ export async function createUser(data: InsertUser) {
 }
 
 export async function getUserInfo(userId: Number) {
+    console.log("userId: ", userId)
     return await db.select().from(usersTable).where(eq(usersTable.id, userId)).limit(1).execute();
 }
 
@@ -25,5 +26,5 @@ export async function createTweet(data: InsertTweet) {
 
 export async function getTweet(userId: Number) {
     console.log("userId: ", userId)
-    return await db.select().from(tweetTable).where(eq(tweetTable.user_id, userId)).limit(1).execute();
+    return await db.select().from(tweetTable).where(eq(tweetTable.userId, userId)).limit(1).execute();
 }

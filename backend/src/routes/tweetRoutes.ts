@@ -65,10 +65,10 @@ async function createTweets(req: express.Request, res: express.Response) {
 async function getTweets(req: express.Request, res: express.Response) {
     try {
 
-        const userId = parseInt(req.params.userId)
+        const tweetId = parseInt(req.params.tweetid)
 
-        console.log("id: ", userId)
-        const tweet = await getTweet(userId);
+        console.log("id: ", tweetId)
+        const tweet = await getTweet(tweetId);
         console.log("tweet", tweet);
         if (!tweet) {
             return res.status(404).json({ error: 'Tweet not found' });
@@ -78,7 +78,7 @@ async function getTweets(req: express.Request, res: express.Response) {
         res.status(500).json({ error: 'Error retrieving user information' });
     }
 }
-router.get('/tweeets/:tweetid', getTweets);
+router.get('/tweets/:tweetid', getTweets);
 
 
 router.post("/insertTweets", createTweets);

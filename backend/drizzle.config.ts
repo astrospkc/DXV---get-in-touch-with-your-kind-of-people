@@ -1,6 +1,19 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import postgres from 'postgres';
-// for migrations
-const migrationClient = postgres("postgres://punam:adminadmin@0.0.0.0:5432/db", { max: 1 });
-migrate(drizzle(migrationClient), ...)
+import { config } from 'dotenv';
+import { defineConfig } from 'drizzle-kit';
+
+config({ path: '.env' });
+
+const supabaseUrl = process.env.SUPABASE_URL;
+console.log("supabaseUrl: ", supabaseUrl)
+if (!supabaseUrl) {
+    throw new Error('SUPABASE_URL is not defined')
+}
+
+export default defineConfig({
+    schema: './src/db/schema.ts',
+    out: './supabase/migrations',
+    dialect: 'postgresql',
+    dbCredentials: {
+        url: supabaseUrl,
+    },
+});

@@ -5,7 +5,7 @@ import { createGroup } from '../db/queries'
 // import { getTweet } from '../db/queries'
 
 import { db } from '../db/db';
-import { tweetTable, usersTable, postsTable, groupTable } from '../db/schema';
+import { usersTable } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
 
 // import bcrypt from 'bcryptjs'
@@ -14,7 +14,7 @@ const router = express.Router()
 
 // const JWT_SECRET = "secret"
 
-// create tweet
+// create group
 async function createGroups(req: express.Request, res: express.Response) {
     console.log(req.body.groupAdminId)
     console.log(req.body)

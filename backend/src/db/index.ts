@@ -1,12 +1,8 @@
 import express from "express";
-import createUserRouter from "../routes/userRoutes"
-
-import getUserRouter from "../routes/userRoutes"
-import createTweetRouter from "../routes/tweetRoutes"
-import getTweetRouter from "../routes/tweetRoutes"
-import createPostRouter from "../routes/postRoutes"
-import getPostRouter from "../routes/postRoutes"
-import createGroupRouter from "../routes/postRoutes"
+import userRouter from "../routes/userRoutes"
+import tweetRouter from "../routes/tweetRoutes"
+import postRouter from "../routes/postRoutes"
+import groupRouter from "../routes/groupRoutes"
 
 
 
@@ -24,25 +20,19 @@ app.use(cors())
 
 
 // route:1 -> create user
-app.use("/api", createUserRouter)
-// route:2 --> get user
-app.use("/api", getUserRouter)
+app.use("/api", userRouter)
+
 
 // routes:3 --> create tweet
-app.use("/api", createTweetRouter)
+app.use("/api", tweetRouter)
 
-// routes:4 -->get tweet
-app.use("/api", getTweetRouter)
 
 // routes:5 --> create post
-app.use("/api", createPostRouter)
-
-// routes:6 --> get post
-app.use("/api", getPostRouter)
+app.use("/api", postRouter)
 
 
 // routes:6 --> create a group
-app.use("/api", createGroupRouter)
+app.use("/api", groupRouter)
 
 
 

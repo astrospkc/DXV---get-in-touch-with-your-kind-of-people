@@ -1,1 +1,0 @@
-ALTER TABLE "group_table" ADD COLUMN "group_admin" text;

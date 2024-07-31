@@ -1,6 +1,6 @@
 {
-  "id": "d12131d7-2217-44d6-b374-c19beae425b1",
-  "prevId": "20b2817b-3c7c-41e9-b277-7bd1586ba308",
+  "id": "6751b200-918c-430c-8fbd-c60746f455af",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -71,7 +71,7 @@
           "columnsTo": [
             "group_id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -91,6 +91,12 @@
         "group_name": {
           "name": "group_name",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "group_adminId": {
+          "name": "group_adminId",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -127,9 +133,38 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "group_table_group_adminId_users_table_id_fk": {
+          "name": "group_table_group_adminId_users_table_id_fk",
+          "tableFrom": "group_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "group_adminId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "group_table_group_name_unique": {
+          "name": "group_table_group_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "group_name"
+          ]
+        },
+        "group_table_github_url_unique": {
+          "name": "group_table_github_url_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "github_url"
+          ]
+        }
+      }
     },
     "public.posts_table": {
       "name": "posts_table",

@@ -8,3 +8,11 @@ install this package:
 npm install express @supabase/supabase-js bcryptjs jsonwebtoken express-validator
 
 npm run dev -> command for localhost
+
+
+
+Problems occurred while building this app:
+1. Error: [supabase/migrations/meta/0017_snapshot.json, supabase/migrations/meta/0018_snapshot.json] are pointing to a parent snapshot: supabase/migrations/meta/0017_snapshot.json/snapshot.json which is a collision.
+
+2. applying migrations...PostgresError: column "member_name" of relation "group_member_table" already exists  (This type of problem has really made me feel frustrated) 
+   solved: by deleting the last updated snapshot.json file and sql file and edited _journal.json file.

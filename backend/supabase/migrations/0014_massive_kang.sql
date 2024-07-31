@@ -1,1 +1,0 @@
-ALTER TABLE "posts_table" ADD COLUMN "media_url" text;

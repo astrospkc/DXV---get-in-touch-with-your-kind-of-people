@@ -1,4 +1,5 @@
 import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 export const usersTable = pgTable('users_table', {
     id: serial('id').primaryKey(),
@@ -41,12 +42,12 @@ export const tweetTable = pgTable('tweet_table', {
 export const groupTable = pgTable('group_table', {
     group_id: serial('group_id').primaryKey(),
     group_name: text('group_name').notNull().unique(),
-    groupAdminId: integer('group_admin_id')
+    groupAdminId: integer('group_adminId')
         .notNull()
         .references(() => usersTable.id, { onDelete: 'cascade' }),
     total_members: integer('total_members').notNull(),
     group_media_url: text('media_url'),
-    github_url: text('github_url').notNull(),
+    github_url: text('github_url').notNull().unique(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at')
         .notNull()
@@ -58,7 +59,7 @@ export const groupTable = pgTable('group_table', {
 export const groupMemberTable = pgTable('group_member_table', {
     group_member_id: integer('member_id').notNull().references(() => usersTable.id),
     group_id: integer('group_id').notNull().references(() => groupTable.group_id, { onDelete: 'cascade' }),
-    member_name: text('member_name').array().notNull(),
+    member_name: text('member_name').notNull(),
     member_email: text('member_email').notNull(),
     member_username: text('member_username').notNull(),
     createdAt: timestamp('created_at').notNull().defaultNow(),

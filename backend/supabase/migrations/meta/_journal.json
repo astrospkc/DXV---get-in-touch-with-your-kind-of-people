@@ -3,87 +3,10 @@
   "dialect": "postgresql",
   "entries": [
     {
-      "idx": 9,
+      "idx": 0,
       "version": "7",
-      "when": 1722323561900,
-      "tag": "0009_conscious_piledriver",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1722323818844,
-      "tag": "0010_tranquil_rhodey",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1722324499953,
-      "tag": "0011_strange_expediter",
-      "breakpoints": true
-    },
-    {
-      "idx": 12,
-      "version": "7",
-      "when": 1722325614433,
-      "tag": "0012_mean_thunderball",
-      "breakpoints": true
-    },
-    {
-      "idx": 13,
-      "version": "7",
-      "when": 1722326617257,
-      "tag": "0013_tired_veda",
-      "breakpoints": true
-    },
-    {
-      "idx": 14,
-      "version": "7",
-      "when": 1722340840582,
-      "tag": "0014_massive_kang",
-      "breakpoints": true
-    },
-    {
-      "idx": 15,
-      "version": "7",
-      "when": 1722344877753,
-      "tag": "0015_uneven_squadron_sinister",
-      "breakpoints": true
-    },
-    {
-      "idx": 16,
-      "version": "7",
-      "when": 1722345259153,
-      "tag": "0016_groovy_stranger",
-      "breakpoints": true
-    },
-    {
-      "idx": 17,
-      "version": "7",
-      "when": 1722348707041,
-      "tag": "0017_happy_franklin_storm",
-      "breakpoints": true
-    },
-    {
-      "idx": 18,
-      "version": "7",
-      "when": 1722355215648,
-      "tag": "0018_yellow_katie_power",
-      "breakpoints": true
-    },
-    {
-      "idx": 19,
-      "version": "7",
-      "when": 1722361896421,
-      "tag": "0019_graceful_master_chief",
-      "breakpoints": true
-    },
-    {
-      "idx": 20,
-      "version": "7",
-      "when": 1722362775329,
-      "tag": "0020_familiar_meteorite",
+      "when": 1722433976038,
+      "tag": "0000_old_harrier",
       "breakpoints": true
     }
   ]

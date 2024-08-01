@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { groupTable, InsertGroup, InsertPost, InsertTweet, InsertUser, postsTable, tweetTable, usersTable } from './schema';
+import { groupTable, InsertGroup, InsertPost, InsertTweet, InsertUser, postsTable, tweetTable, usersTable } from '../schema';
 import { eq } from 'drizzle-orm';
 
 export async function createPost(data: InsertPost) {

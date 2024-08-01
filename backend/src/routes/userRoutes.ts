@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { body, validationResult } from "express-validator";
-import { createUser, getUserInfo } from '../db/queries'
+import { createUser, getUserInfo } from '../db/queries/userQueries'
 import { db } from '../db/db';
 
 // import bcrypt from 'bcryptjs'

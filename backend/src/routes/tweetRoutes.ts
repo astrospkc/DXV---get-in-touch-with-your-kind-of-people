@@ -1,8 +1,8 @@
 import express from 'express'
 
 import { body, validationResult } from "express-validator";
-import { createTweet } from '../db/queries'
-import { getTweet } from '../db/queries'
+import { createTweet, getTweet } from '../db/queries/tweetQueries'
+
 
 import { db } from '../db/db';
 import { tweetTable, usersTable } from '../db/schema';

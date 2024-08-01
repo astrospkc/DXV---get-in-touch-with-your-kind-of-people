@@ -3,6 +3,8 @@ import userRouter from "../routes/userRoutes"
 import tweetRouter from "../routes/tweetRoutes"
 import postRouter from "../routes/postRoutes"
 import groupRouter from "../routes/groupRoutes"
+import groupMemberRouter from "../routes/groupMemberRoute"
+
 
 
 
@@ -23,17 +25,20 @@ app.use(cors())
 app.use("/api", userRouter)
 
 
-// routes:3 --> create tweet
+// routes:2 --> create tweet
 app.use("/api", tweetRouter)
 
 
-// routes:5 --> create post
+// routes:3 --> create post
 app.use("/api", postRouter)
 
 
-// routes:6 --> create a group
+// routes:4 --> create a group
 app.use("/api", groupRouter)
 
+
+// routes:5 --> create group members
+app.use("/api", groupMemberRouter)
 
 
 

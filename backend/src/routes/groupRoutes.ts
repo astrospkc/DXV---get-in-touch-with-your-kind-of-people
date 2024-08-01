@@ -1,18 +1,17 @@
 import express from 'express'
 
 import { body, validationResult } from "express-validator";
-import { createGroup } from '../db/queries'
-// import { getTweet } from '../db/queries'
+import { createGroup, getGroupDetail } from '../db/queries/groupQueries'
+
 
 import { db } from '../db/db';
 import { usersTable } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
 
-// import bcrypt from 'bcryptjs'
-// import jwt from 'jsonwebtoken'
+
 const router = express.Router()
 
-// const JWT_SECRET = "secret"
+
 
 // create group
 async function createGroups(req: express.Request, res: express.Response) {
@@ -47,25 +46,25 @@ async function createGroups(req: express.Request, res: express.Response) {
 
 }
 
-// getting id by only entering the username ( its unique), and from the id fetching the content
+// getting the group information
 
-// async function getPosts(req: express.Request, res: express.Response) {
-//     try {
+async function getGroupInfo(req: express.Request, res: express.Response) {
+    try {
 
-//         const postId = parseInt(req.params.postid)
+        const groupId = parseInt(req.params.groupid)
 
-//         console.log("id: ", postId)
-//         const post = await getPost(postId);
-//         console.log("post", post);
-//         if (!post) {
-//             return res.status(404).json({ error: 'Post not found' });
-//         }
-//         res.json(post);
-//     } catch (error) {
-//         res.status(500).json({ error: 'Error retrieving user information' });
-//     }
-// }
-// router.get('/posts/:postid', getPosts);
+        console.log("id: ", groupId)
+        const group = await getGroupDetail(groupId);
+        console.log("group", group);
+        if (!group) {
+            return res.status(404).json({ error: 'group not found' });
+        }
+        res.json(group);
+    } catch (error) {
+        res.status(500).json({ error: 'Error retrieving user information' });
+    }
+}
+router.get('/groups/:groupid', getGroupInfo);
 
 
 router.post("/createGroup", createGroups);

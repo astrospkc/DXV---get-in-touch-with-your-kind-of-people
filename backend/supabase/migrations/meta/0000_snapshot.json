@@ -1,5 +1,5 @@
 {
-  "id": "6751b200-918c-430c-8fbd-c60746f455af",
+  "id": "1b383e69-dd45-49c0-8eeb-1a732eb67f99",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -17,24 +17,6 @@
         "group_id": {
           "name": "group_id",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "member_name": {
-          "name": "member_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "member_email": {
-          "name": "member_email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "member_username": {
-          "name": "member_username",
-          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -59,19 +41,6 @@
             "id"
           ],
           "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "group_member_table_group_id_group_table_group_id_fk": {
-          "name": "group_member_table_group_id_group_table_group_id_fk",
-          "tableFrom": "group_member_table",
-          "tableTo": "group_table",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "group_id"
-          ],
-          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -117,6 +86,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "project_desc": {
+          "name": "project_desc",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",

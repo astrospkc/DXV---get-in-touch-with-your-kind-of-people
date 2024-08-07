@@ -1,12 +1,13 @@
 import express from 'express'
 
 import { body, validationResult } from "express-validator";
-import { createTweet, getTweet } from '../db/queries/tweetQueries'
+import { createTweet, getallTweet, getTweet } from '../db/queries/tweetQueries'
 
 
 import { db } from '../db/db';
 import { tweetTable, usersTable } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
+import fetchuser from '../../middleware/fetchuser';
 
 // import bcrypt from 'bcryptjs'
 // import jwt from 'jsonwebtoken'
@@ -62,7 +63,7 @@ async function createTweets(req: express.Request, res: express.Response) {
 
 // getting id by only entering the username ( its unique), and from the id fetching the content
 
-async function getTweets(req: express.Request, res: express.Response) {
+async function getUserTweets(req: express.Request, res: express.Response) {
     try {
 
         const tweetId = parseInt(req.params.tweetid)
@@ -78,9 +79,25 @@ async function getTweets(req: express.Request, res: express.Response) {
         res.status(500).json({ error: 'Error retrieving user information' });
     }
 }
-router.get('/tweets/:tweetid', getTweets);
+// getting all the tweets that's stored in the database
+async function getAllTweets(req: express.Request, res: express.Response) {
+    try {
+
+        const tweets = await getallTweet();
+        console.log("tweets", tweets);
+        if (!tweets) {
+            return res.status(404).json({ error: 'Tweet not found' });
+        }
+        res.json(tweets);
+    } catch (error) {
+        res.status(500).json({ error: 'Error retrieving user information' });
+    }
+}
 
 
-router.post("/insertTweets", createTweets);
+router.get('/tweets/:tweetid', fetchuser, getUserTweets);
+
+router.get('/tweets', fetchuser, getAllTweets)
+router.post("/insertTweets", fetchuser, createTweets);
 
 export default router

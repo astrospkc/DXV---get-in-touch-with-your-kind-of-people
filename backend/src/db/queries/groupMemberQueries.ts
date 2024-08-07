@@ -4,7 +4,7 @@ import { groupTable, InsertGroup, InsertPost, InsertTweet, InsertUser, postsTabl
 import { eq } from 'drizzle-orm';
 
 
-export async function createGroupMembers(data: InsertMember) {
+export async function addGroupMembers(data: InsertMember) {
     console.log("group data: ", data)
     await db.insert(groupMemberTable).values(data);
     return data

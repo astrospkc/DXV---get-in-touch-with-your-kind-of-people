@@ -5,11 +5,6 @@ import postRouter from "../routes/postRoutes"
 import groupRouter from "../routes/groupRoutes"
 import groupMemberRouter from "../routes/groupMemberRoute"
 
-
-
-
-
-
 import cors from 'cors';
 
 

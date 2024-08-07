@@ -43,11 +43,11 @@ export const groupTable = pgTable('group_table', {
     group_id: serial('group_id').primaryKey(),
     group_name: text('group_name').notNull().unique(),
     groupAdminId: integer('group_adminId')
-        .notNull()
-        .references(() => usersTable.id, { onDelete: 'cascade' }),
+        .notNull().references(() => usersTable.id, { onDelete: 'cascade' }),
     total_members: integer('total_members').notNull(),
     group_media_url: text('media_url'),
     github_url: text('github_url').notNull().unique(),
+    project_desc: text('project_desc'),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at')
         .notNull()
@@ -58,10 +58,8 @@ export const groupTable = pgTable('group_table', {
 
 export const groupMemberTable = pgTable('group_member_table', {
     group_member_id: integer('member_id').notNull().references(() => usersTable.id),
-    group_id: integer('group_id').notNull().references(() => groupTable.group_id, { onDelete: 'cascade' }),
-    member_name: text('member_name').notNull(),
-    member_email: text('member_email').notNull(),
-    member_username: text('member_username').notNull(),
+    group_id: integer('group_id').notNull(),
+
     createdAt: timestamp('created_at').notNull().defaultNow(),
 })
 

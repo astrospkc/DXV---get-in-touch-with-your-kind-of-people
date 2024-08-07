@@ -13,3 +13,7 @@ export async function getTweet(userId: Number) {
     console.log("userId: ", userId)
     return await db.select().from(tweetTable).where(eq(tweetTable.userId, userId)).limit(1).execute();
 }
+
+export async function getallTweet() {
+    return await db.select().from(tweetTable)
+}

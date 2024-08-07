@@ -14,3 +14,8 @@ export async function getGroupDetail(groupId: Number) {
     console.log("group id: ", groupId)
     return await db.select().from(groupTable).where(eq(groupTable.groupAdminId, groupId)).limit(1).execute();
 }
+
+export async function get_groups(groupId: Number) {
+    console.log("groupId: ", groupId)
+    return await db.select().from(groupTable).where(eq(groupTable.groupAdminId, groupId)).limit(1).execute()
+}

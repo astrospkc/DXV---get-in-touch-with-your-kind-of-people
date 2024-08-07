@@ -7,6 +7,7 @@ import { createGroup, getGroupDetail } from '../db/queries/groupQueries'
 import { db } from '../db/db';
 import { usersTable } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
+import fetchuser from '../../middleware/fetchuser';
 
 
 const router = express.Router()
@@ -64,9 +65,19 @@ async function getGroupInfo(req: express.Request, res: express.Response) {
         res.status(500).json({ error: 'Error retrieving user information' });
     }
 }
-router.get('/groups/:groupid', getGroupInfo);
+
+async function getAllGroups(req: express.Request, res: express.Response) {
+    try {
+        const username = req.body.username
+        const groups = await get_groups(username)
+
+    } catch (error) {
+
+    }
+}
+router.get('/groups/:groupid', fetchuser, getGroupInfo);
 
 
-router.post("/createGroup", createGroups);
+router.post("/createGroup", fetchuser, createGroups);
 
 export default router

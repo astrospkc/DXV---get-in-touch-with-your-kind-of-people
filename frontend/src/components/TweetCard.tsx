@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsCursorFill } from "react-icons/bs";
 import { BsFillChatFill } from "react-icons/bs";
 import { BsHeartFill } from "react-icons/bs";
@@ -36,7 +36,7 @@ const tools = [
 
 
 
-function TooltipDemo() {
+function Tooltips() {
     return (
         <div className="flex gap-4 justify-evenly">
             {tools.map((ele) => (
@@ -56,49 +56,75 @@ function TooltipDemo() {
 }
 
 
+interface Item {
+    id: number; // or string, depending on your API
+    content: string,
+    userId: number,
+    num_likes: number
+    // Add other properties as needed
+}
+
 
 const TweetCard = () => {
-    return (
-        <div className='m-2  p-3 border-2 border-gray-700 flex flex-row bg-gray-800 rounded-2xl'>
+    const [data, setData] = useState<Item[]>([])
+    // handling api calls: 
+    useEffect(() => {
+        const fetchdata = async () => {
+            const res = await fetch("http://localhost:8000/tweet/tweets")
+            const data = await res.json();
+            console.log(data)
+            setData(data)
+        }
+        fetchdata()
+    }, [])
 
-            {/* 1. Avatar
+
+    return (
+        <>
+            {data && data.map((ele) => {
+                return (
+                    <div className='m-2  p-3  flex flex-row bg-gradient-to-r from-pink-600 to-black rounded-2xl ' key={ele.id}>
+
+                        {/* 1. Avatar
                 2. the smaller main content
                     i. username, holder name data, groupname
                     ii. the main content , tweet
                     iii. all the buttons , symbols
         
             */}
-            <div className=''>
-                <h1 className='w-fit p-2 bg-black text-white rounded-full'>Avatar</h1>
-            </div>
-            <div className='w-full'>
-                <div className='flex flex-row border-b-2 border-b-black text-sm m-2 p-3 gap-4'>
-                    <div className='flex flex-col'><h1>Holder name</h1>
-                        <h1>@Username</h1></div>
-                    <div className='flex flex-row gap-4'>
-                        <h1>--group name</h1>
-                        <h1>date</h1>
+
+                        <div className=''>
+                            <h1 className='w-fit p-2 bg-black text-white rounded-full'>Avatar</h1>
+                        </div>
+                        <div className='w-full'>
+                            <div className='flex flex-row border-b-2 border-b-black text-sm m-2 p-3 gap-4'>
+                                <div className='flex flex-col'><h1>Holder name</h1>
+                                    <h1>@Username</h1></div>
+                                <div className='flex flex-row gap-4'>
+                                    <h1>--group name</h1>
+                                    <h1>date</h1>
+                                </div>
+
+                            </div>
+                            <div className='bg-black m-2 p-4 rounded-3xl'>{ele.content}</div>
+
+                            <div>
+
+                                <Tooltips />
+
+
+                            </div>
+                        </div>
+
+
                     </div>
-
-                </div>
-                <div className='bg-black m-2 p-4 rounded-3xl'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi aliquid minima amet, soluta laborum, praesentium repudiandae maxime ab, quam unde provident. Id asperiores, ullam nobis quia debitis tempora ipsam expedita, voluptates delectus magni nostrum error deserunt enim consequuntur, perferendis repellat! Commodi accusamus voluptates fuga libero quasi quidem eos provident laborum?</div>
-                {/* <div>
-                    <ul className='flex flex-row justify-evenly'><li><BsHeartFill /></li>
-                        <li><BsFillChatFill /></li>
-                        <li><BsCursorFill /></li>
-                        <li>...</li></ul>
-
-                </div> */}
-                <div>
-
-                    <TooltipDemo />
+                )
+            })}
 
 
-                </div>
-            </div>
+        </>
 
 
-        </div>
     )
 }
 

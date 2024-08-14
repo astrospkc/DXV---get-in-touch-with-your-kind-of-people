@@ -3,9 +3,10 @@ import SearchBar from './SearchBar'
 import TweetCard from './TweetCard'
 
 
+
 const MainContent = () => {
     return (
-        <div>
+        <div className='mt-20'>
             <div className='m-3'>
                 <SearchBar />
             </div>

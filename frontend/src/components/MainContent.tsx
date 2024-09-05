@@ -5,6 +5,8 @@ import TweetCard from './TweetCard'
 
 
 const MainContent = () => {
+    
+
     return (
         <div className='mt-20'>
             <div className='m-3'>

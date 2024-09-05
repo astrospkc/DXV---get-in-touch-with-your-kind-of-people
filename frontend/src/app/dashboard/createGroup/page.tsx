@@ -8,6 +8,7 @@ import { UserContext } from '@/context/UserState';
 
 const CreateGroupForm = () => {
     // const [user, setUser] = useState({});
+    const [load_context , setLoadContext] = useState(loader_context)
     const user_context = useContext(UserContext)
     const group_context = useContext(GroupContext);
     const { createGroup } = group_context;

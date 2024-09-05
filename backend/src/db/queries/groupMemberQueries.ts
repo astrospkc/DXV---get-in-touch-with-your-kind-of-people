@@ -10,7 +10,7 @@ export async function addGroupMembers(data: InsertMember) {
     return data
 }
 
-// export async function getGroupMemberdetails(groupId: Number) {
-//     console.log("group id: ", groupId)
-//     return await db.select().from(groupTable).where(eq(groupTable.groupAdminId, groupId)).limit(1).execute();
-// }
+export async function getGroupMemberdetails(groupId: Number) {
+    console.log("group id: ", groupId)
+    return await db.select().from(groupMemberTable).where(eq(groupMemberTable.group_id, groupId)).execute();
+}

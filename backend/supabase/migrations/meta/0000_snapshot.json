@@ -1,9 +1,178 @@
 {
-  "id": "1b383e69-dd45-49c0-8eeb-1a732eb67f99",
+  "id": "c00df0f2-15a2-4b2f-aa4b-b1cd7f852f2a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.chat_table": {
+      "name": "chat_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "chatName": {
+          "name": "chatName",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isGroupChat": {
+          "name": "isGroupChat",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "users": {
+          "name": "users",
+          "type": "integer[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "latestMessage": {
+          "name": "latestMessage",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "latestMessageId": {
+          "name": "latestMessageId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "groupAdmin": {
+          "name": "groupAdmin",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "chat_table_latestMessageId_messages_table_id_fk": {
+          "name": "chat_table_latestMessageId_messages_table_id_fk",
+          "tableFrom": "chat_table",
+          "tableTo": "messages_table",
+          "columnsFrom": [
+            "latestMessageId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "chat_table_groupAdmin_users_table_id_fk": {
+          "name": "chat_table_groupAdmin_users_table_id_fk",
+          "tableFrom": "chat_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "groupAdmin"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "chat_table_chatName_unique": {
+          "name": "chat_table_chatName_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "chatName"
+          ]
+        }
+      }
+    },
+    "public.comments_table": {
+      "name": "comments_table",
+      "schema": "",
+      "columns": {
+        "comment_id": {
+          "name": "comment_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "tweet_id": {
+          "name": "tweet_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "commented_at": {
+          "name": "commented_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "comments_table_tweet_id_tweet_table_id_fk": {
+          "name": "comments_table_tweet_id_tweet_table_id_fk",
+          "tableFrom": "comments_table",
+          "tableTo": "tweet_table",
+          "columnsFrom": [
+            "tweet_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "comments_table_user_id_users_table_id_fk": {
+          "name": "comments_table_user_id_users_table_id_fk",
+          "tableFrom": "comments_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.group_member_table": {
       "name": "group_member_table",
       "schema": "",
@@ -11,7 +180,7 @@
         "member_id": {
           "name": "member_id",
           "type": "integer",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "group_id": {
@@ -39,6 +208,19 @@
           ],
           "columnsTo": [
             "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "group_member_table_group_id_group_table_group_id_fk": {
+          "name": "group_member_table_group_id_group_table_group_id_fk",
+          "tableFrom": "group_member_table",
+          "tableTo": "group_table",
+          "columnsFrom": [
+            "group_id"
+          ],
+          "columnsTo": [
+            "group_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -141,6 +323,242 @@
         }
       }
     },
+    "public.likes_table": {
+      "name": "likes_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "tweet_id": {
+          "name": "tweet_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "liked_At": {
+          "name": "liked_At",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "likes_table_tweet_id_tweet_table_id_fk": {
+          "name": "likes_table_tweet_id_tweet_table_id_fk",
+          "tableFrom": "likes_table",
+          "tableTo": "tweet_table",
+          "columnsFrom": [
+            "tweet_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "likes_table_user_id_users_table_id_fk": {
+          "name": "likes_table_user_id_users_table_id_fk",
+          "tableFrom": "likes_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.messages_table": {
+      "name": "messages_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "sender_id": {
+          "name": "sender_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "receiver_id": {
+          "name": "receiver_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sentAt": {
+          "name": "sentAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "read_status": {
+          "name": "read_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "messages_table_sender_id_users_table_id_fk": {
+          "name": "messages_table_sender_id_users_table_id_fk",
+          "tableFrom": "messages_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "sender_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "messages_table_receiver_id_users_table_id_fk": {
+          "name": "messages_table_receiver_id_users_table_id_fk",
+          "tableFrom": "messages_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "receiver_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "messages_table_group_id_group_table_group_id_fk": {
+          "name": "messages_table_group_id_group_table_group_id_fk",
+          "tableFrom": "messages_table",
+          "tableTo": "group_table",
+          "columnsFrom": [
+            "group_id"
+          ],
+          "columnsTo": [
+            "group_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.notification_table": {
+      "name": "notification_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "sender_id": {
+          "name": "sender_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "chat_id": {
+          "name": "chat_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isRead": {
+          "name": "isRead",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "notification_table_sender_id_users_table_id_fk": {
+          "name": "notification_table_sender_id_users_table_id_fk",
+          "tableFrom": "notification_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "sender_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "notification_table_chat_id_users_table_id_fk": {
+          "name": "notification_table_chat_id_users_table_id_fk",
+          "tableFrom": "notification_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "chat_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.posts_table": {
       "name": "posts_table",
       "schema": "",
@@ -223,6 +641,12 @@
           "type": "serial",
           "primaryKey": true,
           "notNull": true
+        },
+        "media_url": {
+          "name": "media_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "content": {
           "name": "content",

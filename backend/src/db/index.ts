@@ -21,19 +21,19 @@ app.use("/api", userRouter)
 
 
 // routes:2 --> create tweet
-app.use("/api", tweetRouter)
+app.use("/tweet", tweetRouter)
 
 
 // routes:3 --> create post
-app.use("/api", postRouter)
+app.use("/post", postRouter)
 
 
 // routes:4 --> create a group
-app.use("/api", groupRouter)
+app.use("/group", groupRouter)
 
 
 // routes:5 --> create group members
-app.use("/api", groupMemberRouter)
+app.use("/group_member", groupMemberRouter)
 
 
 

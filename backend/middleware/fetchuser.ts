@@ -23,8 +23,8 @@ const fetchuser = async (req: express.Request, res: express.Response, next: expr
 
     try {
         if (token === undefined) return res.status(401).send({ error: "Authenticate using a valid token" });
-        const data = await jwt.verify(token, JWT_secret);
-        console.log("Data after jwt verification : ", data);
+        const data = jwt.verify(token, JWT_secret);
+        console.log("Data after jwt verification : \n", data.user);
         req.user = data.user;
         next();
     } catch (error) {

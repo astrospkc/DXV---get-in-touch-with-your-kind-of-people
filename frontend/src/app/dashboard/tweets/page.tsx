@@ -1,4 +1,5 @@
 
+"use client"
 import React, { useContext, useEffect, useState } from 'react'
 import { BsCursorFill } from "react-icons/bs";
 import { BsFillChatFill } from "react-icons/bs";
@@ -65,28 +66,24 @@ interface Item {
     // Add other properties as needed
 }
 
-import {LoaderContext} from "@/context/LoaderState"
 
 const TweetCard = () => {
     const [data, setData] = useState<Item[]>([])
-    const tweet_context = useContext(TweetContext)
-    const { getTweets, setGetTweets, getAllTweets } = tweet_context
-    const {isLoading, setIsLoading} =useContext(LoaderContext)
-    console.log("get tweets: ", getTweets)
+    const userTweet_context = useContext(TweetContext)
+    const { userTweets, getUserTweets } = userTweet_context
+    console.log("get tweets: ", userTweets)
     // handling api calls: 
     useEffect(() => {
-        setIsLoading(prev => !prev)
-        getAllTweets()
-        setIsLoading(prev => !prev)
-
+        getUserTweets()
     }, [])
 
 
     return (
-        <>{
-            isLoading ? <div>...isLoading</div> :
-            <>
-            {getTweets && getTweets.map((ele) => {
+        <>
+            <div className='flex flex-col justify-center items-center m-auto my-4 border-2 rounded-xl border-gray-400 p-4 text-bold text-xl'>
+                Posted Tweets
+            </div>
+            {userTweets && userTweets.map((ele) => {
                 return (
                     <div className='m-2  p-3  flex flex-row bg-gradient-to-r from-pink-600 to-black rounded-2xl ' key={ele.id}>
 
@@ -124,10 +121,8 @@ const TweetCard = () => {
 
                     </div>
                 )
-            })} </>
+            })}
 
-        }
-            
 
         </>
 

@@ -118,7 +118,7 @@ router.get("/getUserInfo_Token", fetchuser, async (req: express.Request, res: ex
 
 async function getUser(req: express.Request, res: express.Response) {
     try {
-        const userId = parseInt(req.params.userid)
+        const userId = req.user?.id
 
         console.log("id: ", userId)
         const user = await getUserInfo(userId);
@@ -149,7 +149,7 @@ async function getAllUsers(req: express.Request, res: express.Response) {
 
 router.post('/login', loginUser)
 router.get('/users', getAllUsers)
-router.get('/users/:userid', fetchuser, getUser);
+router.get('/user_info', fetchuser, getUser);
 router.post("/signup", createUserInfo);
 
 export default router

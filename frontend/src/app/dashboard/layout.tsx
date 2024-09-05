@@ -10,6 +10,8 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { GroupState } from "@/context/GroupState";
 import { UserState } from "@/context/UserState";
+import { TweetState } from "@/context/TweetState";
+import { LoaderState } from "@/context/LoaderState";
 
 
 // const inter = Inter({ subsets: ["latin"] });
@@ -35,36 +37,47 @@ export default function FormLayout({ children }: FormLayoutProps) {
 
     console.log("is authenticated: ", isAuthenticated)
     return (
+        <LoaderState>
+
+    
         <UserState>
+            <TweetState>
 
 
-            <GroupState>
-                <div className="flex flex-col h-screen w-screen">
 
-                    <Header />
-                    <div className="flex flex-1 flex-row overflow-y-hidden">
-                        <div className="w-1/5  overflow-y-hidden border-r-2"><LeftBar /></div>
-                        {
-                            !isAuthenticated ?
-                                <div className="w-3/5  flex flex-col h-full overflow-y-scroll border-r-2 bg-gradient-to-r from-indigo-950 to-red-950 justify-center items-center m-auto text-xl text-center ">Authenticate yourself first by login or signup , we would be happy to share the interesting ideas.
-                                    <Link href="/"><Button>Go Back</Button></Link>
-                                </div>
-                                :
-                                <div className="w-3/5  flex-1 overflow-y-scroll border-r-2 bg-gradient-to-r from-indigo-950 to-red-950 ">{children}</div>
+                <GroupState>
+                    <div className="flex flex-col h-screen w-screen">
 
-                        }
-                        <div className=" w-1/5  overflow-y-scroll px-6 "><RightBar /></div>
+                        <Header />
+                        <div className="flex flex-1 flex-row overflow-y-hidden">
+                            <div className="w-1/5  overflow-y-hidden border-r-2"><LeftBar /></div>
+                            {
+                                !isAuthenticated ?
+                            
+                                    <div className="w-3/5  flex flex-col h-full overflow-y-scroll border-r-2 bg-gradient-to-r from-indigo-950 to-red-950 justify-center items-center m-auto text-xl text-center ">Authenticate yourself first by login or signup , we would be happy to share the interesting ideas.
+                                        <Link href="/"><Button>Go Back</Button></Link>
+                                    </div>
+                                    :
+                                    <div className="w-3/5  flex-1 overflow-y-scroll border-r-2 bg-gradient-to-r from-indigo-950 to-red-950 ">{children}</div>
+
+                            }
+                            <div className=" w-1/5  overflow-y-scroll px-6 "><RightBar /></div>
+
+
+
+                        </div>
 
 
 
                     </div>
 
+                </GroupState>
 
 
-                </div>
 
-            </GroupState>
+            </TweetState>
         </UserState>
+        </LoaderState>
 
     );
 }

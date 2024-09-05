@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { body, validationResult } from "express-validator";
-import { createTweet, getallTweet, getTweet } from '../db/queries/tweetQueries'
+import { createTweet, getallTweet, getAllTweetSingleUser } from '../db/queries/tweetQueries'
 
 
 import { db } from '../db/db';
@@ -18,10 +18,11 @@ const router = express.Router()
 // create tweet
 async function createTweets(req: express.Request, res: express.Response) {
     console.log(req.body)
-    const { content, userId } = req.body;
+    const { content } = req.body;
+    const userId = req.user?.id;
 
 
-    if (!content || !userId) {
+    if (!content) {
         return res.status(400).json({ error: "All fields are required" })
     }
 
@@ -41,13 +42,6 @@ async function createTweets(req: express.Request, res: express.Response) {
 
     console.log("tweet exist: ", tweetExists)
 
-    // if content in the tweetexist or not
-    if (tweetExists.length != 0) {
-        if (tweetExists[0]['content'].length > 0) {
-            return res.status(409).json({ error: "Tweet with the same content already exists for this user" });
-        }
-    }
-
 
     const tweets = await createTweet(
         {
@@ -66,10 +60,10 @@ async function createTweets(req: express.Request, res: express.Response) {
 async function getUserTweets(req: express.Request, res: express.Response) {
     try {
 
-        const tweetId = parseInt(req.params.tweetid)
+        const tweetId = req.user?.id;
 
         console.log("id: ", tweetId)
-        const tweet = await getTweet(tweetId);
+        const tweet = await getAllTweetSingleUser(tweetId);
         console.log("tweet", tweet);
         if (!tweet) {
             return res.status(404).json({ error: 'Tweet not found' });
@@ -95,9 +89,9 @@ async function getAllTweets(req: express.Request, res: express.Response) {
 }
 
 
-router.get('/tweets/:tweetid', fetchuser, getUserTweets);
+router.get('/user_tweets', fetchuser, getUserTweets);
 
-router.get('/tweets', fetchuser, getAllTweets)
+router.get('/tweets', getAllTweets)
 router.post("/insertTweets", fetchuser, createTweets);
 
 export default router

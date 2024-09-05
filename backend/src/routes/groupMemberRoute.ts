@@ -1,12 +1,15 @@
 import express from 'express'
 
 import { body, validationResult } from "express-validator";
-import { addGroupMembers } from '../db/queries/groupMemberQueries'
+import { addGroupMembers, getGroupMemberdetails } from '../db/queries/groupMemberQueries'
 // import { getTweet } from '../db/queries'
 
 import { db } from '../db/db';
 import { usersTable } from '../db/schema';
 import { eq, and } from 'drizzle-orm';
+import { get_groups } from '../db/queries/groupQueries';
+import { group } from 'console';
+import fetchuser from '../../middleware/fetchuser';
 
 // import bcrypt from 'bcryptjs'
 // import jwt from 'jsonwebtoken'
@@ -51,9 +54,36 @@ async function addGroupMember(req: express.Request, res: express.Response) {
 
 }
 
+async function getGroupMemberDetails(req: express.Request, res: express.Response) {
+    console.log(req.user)
+    try {
+        // first of all get the group info , then get the details through group_id
+        const user_id = req.user?.id;
+        console.log("user id: ", user_id)
+        const groups = await get_groups(user_id)
+        console.log("groups: ", groups)
+        const group_members = new Array();
+        // now getting the details of the member using group_id
+        for (let i = 0; i < groups.length; i++) {
+            const group_id = groups[2]['group_id']
+            console.log("group id: ", group_id)
+            const groupMembers = await getGroupMemberdetails(group_id)
+
+            group_members.push(groupMembers)
+
+        }
+
+        res.json(group_members)
+
+    } catch (error) {
+        return res.status(500).json({ error: 'Error retrieving group member information' });
+    }
+}
+
 
 
 
 router.post("/createGroupMember", addGroupMember);
+router.get("/getAllGroupsOfUser/group_member_details", fetchuser, getGroupMemberDetails)
 
 export default router;

@@ -4,6 +4,7 @@ import tweetRouter from "../routes/tweetRoutes"
 import postRouter from "../routes/postRoutes"
 import groupRouter from "../routes/groupRoutes"
 import groupMemberRouter from "../routes/groupMemberRoute"
+import chatRouter from "../routes/chat"
 
 import cors from 'cors';
 
@@ -34,6 +35,9 @@ app.use("/group", groupRouter)
 
 // routes:5 --> create group members
 app.use("/group_member", groupMemberRouter)
+
+// route:6 --> chat
+app.use("/chat", chatRouter)
 
 
 

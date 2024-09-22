@@ -6,8 +6,7 @@ CREATE TABLE IF NOT EXISTS "chat_table" (
 	"latestMessage" text,
 	"latestMessageId" integer,
 	"groupAdmin" integer NOT NULL,
-	"createdAt" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "chat_table_chatName_unique" UNIQUE("chatName")
+	"createdAt" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "comments_table" (

@@ -1,5 +1,5 @@
 {
-  "id": "c00df0f2-15a2-4b2f-aa4b-b1cd7f852f2a",
+  "id": "ac08c8cb-a431-4b50-b29e-844b8a82a5bd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -89,15 +89,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "chat_table_chatName_unique": {
-          "name": "chat_table_chatName_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "chatName"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "public.comments_table": {
       "name": "comments_table",

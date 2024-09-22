@@ -99,8 +99,9 @@ export const messages = pgTable('messages_table', {
 })
 export const chat = pgTable("chat_table", {
     id: serial("id").notNull().primaryKey(),
-    chatName: text("chatName").notNull().unique(),
+    chatName: text("chatName").notNull(),
     isGroupChat: boolean("isGroupChat").notNull().default(false),
+    // users: text("users").notNull(),
     users: integer("users").references(() => usersTable.id).array(),
     latestMessage: text("latestMessage"),
     latestMessageId: integer("latestMessageId").references(() => messages.id),

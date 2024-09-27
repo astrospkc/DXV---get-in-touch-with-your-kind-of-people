@@ -2,18 +2,12 @@ import express from 'express'
 
 import { body, validationResult } from "express-validator";
 import { createPost, getPost } from '../db/queries/postsQueries'
-import { getTweet } from '../db/queries/tweetQueries'
-
+// import { getTweet } from '../db/queries/tweetQueries'
 import { db } from '../db/db';
-import { tweetTable, usersTable, postsTable } from '../db/schema';
+import { usersTable, postsTable } from '../db/schema/index';
 import { eq, and } from 'drizzle-orm';
 import fetchuser from '../../middleware/fetchuser';
-
-// import bcrypt from 'bcryptjs'
-// import jwt from 'jsonwebtoken'
 const router = express.Router()
-
-// const JWT_SECRET = "secret"
 
 // create tweet
 async function createPosts(req: express.Request, res: express.Response) {
@@ -81,9 +75,9 @@ async function getPosts(req: express.Request, res: express.Response) {
         res.status(500).json({ error: 'Error retrieving user information' });
     }
 }
+
+
 router.get('/posts/:postid', fetchuser, getPosts);
-
-
 router.post("/insertPosts", fetchuser, createPosts);
 
 export default router

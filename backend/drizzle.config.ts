@@ -10,10 +10,13 @@ if (!supabaseUrl) {
 }
 
 export default defineConfig({
-    schema: './src/db/schema.ts',
+    schema: './src/db/schema/index.ts',
     out: './supabase/migrations',
     dialect: 'postgresql',
     dbCredentials: {
         url: supabaseUrl,
     },
+    verbose: true, //  In verbose mode, Drizzle ORM will provide more detailed output and logging during the migration generation, helps for debuuging
+    strict: true //  Drizzle ORM will enforce stricter checks and validations on the schema definitions and generated migrations.
+
 });

@@ -27,6 +27,7 @@
     "express-validator": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "postgres": "^3.4.4",
+    "socket.io": "^4.8.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

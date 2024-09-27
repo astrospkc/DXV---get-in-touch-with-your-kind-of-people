@@ -1,18 +1,11 @@
 import express from 'express'
-
-import { body, validationResult } from "express-validator";
 import { createGroup, get_all_groups, get_groups, getGroupDetail } from '../db/queries/groupQueries'
-
-
 import { db } from '../db/db';
-import { usersTable } from '../db/schema';
-import { eq, and } from 'drizzle-orm';
+import { usersTable } from '../db/schema/index';
+import { eq } from 'drizzle-orm';
 import fetchuser from '../../middleware/fetchuser';
 import { getUserInfo } from '../db/queries/userQueries';
-
-
 const router = express.Router()
-
 
 
 // create group
@@ -92,7 +85,7 @@ async function getAllGroupsOfUser(req: express.Request, res: express.Response) {
         // how to get all the groups created by this single user
         // 1. get the user id
         // 2. get the groups which will contain the group_id , and from that group_id we can get the group member details along with the group_name and all the group details
-        const user_id = req.user?.id;
+        const user_id = parseInt(req.user?.id ?? '');
         console.log("user id: ", user_id)
         const groups = await get_groups(user_id)
         console.log("groups: ", groups)
@@ -107,7 +100,7 @@ async function getAllGroupsOfUser(req: express.Request, res: express.Response) {
 
 async function getUserIdInfo(req: express.Request, res: express.Response) {
     try {
-        const userId = req.params.userId
+        const userId = parseInt(req.params.userId ?? '')
         console.log("user id: ", userId)
         const user = await getUserInfo(userId)
         console.log("user", user)

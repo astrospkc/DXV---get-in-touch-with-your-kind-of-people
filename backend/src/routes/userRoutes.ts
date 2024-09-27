@@ -1,15 +1,12 @@
-import { usersTable } from './../db/schema';
+import { usersTable } from './../db/schema/index';
 import express from 'express'
-
-import { body, validationResult } from "express-validator";
 import { checkUser, createUser, getallUsers, getUserInfo } from '../db/queries/userQueries'
 import { db } from '../db/db';
-
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { check } from 'drizzle-orm/mysql-core';
 import fetchuser from '../../middleware/fetchuser';
-import { eq } from 'drizzle-orm';
+import { and, eq, like, not, or } from 'drizzle-orm';
+import { emitWarning } from 'process';
 const router = express.Router()
 
 declare global {
@@ -111,14 +108,15 @@ async function loginUser(req: express.Request, res: express.Response) {
 
 router.get("/getUserInfo_Token", fetchuser, async (req: express.Request, res: express.Response) => {
     console.log("user id ", req.user)
-    const id = req.user?.id;
+    const id = parseInt(req.user?.id ?? '');
     const data = await db.select().from(usersTable).where(eq(usersTable.id, id)).limit(1).execute()
     res.send(data)
 })
 
+// responsible for providing userinfo when id is provided
 async function getUser(req: express.Request, res: express.Response) {
     try {
-        const userId = req.user?.id
+        const userId = parseInt(req.user?.id ?? '')
 
         console.log("id: ", userId)
         const user = await getUserInfo(userId);
@@ -127,6 +125,24 @@ async function getUser(req: express.Request, res: express.Response) {
             return res.status(404).json({ error: 'User not found' });
         }
         res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: 'Error retrieving user information' });
+    }
+}
+
+// get user info with id
+async function getUserInfoId(req: express.Request, res: express.Response) {
+    try {
+        const id = parseInt(req.params.id)
+        const user = await db.select({
+            id: usersTable.id,
+            name: usersTable.name,
+            username: usersTable.username,
+            email: usersTable.email,
+            media_url: usersTable.media_url
+        }).from(usersTable).where(eq(usersTable.id, id)).limit(1).execute()
+
+        res.status(200).json(user)
     } catch (error) {
         res.status(500).json({ error: 'Error retrieving user information' });
     }
@@ -147,9 +163,43 @@ async function getAllUsers(req: express.Request, res: express.Response) {
 }
 
 
+// search for the user
+async function searchUser(req: express.Request, res: express.Response) {
+    // db.select().from(table).where(ne(table.column, 5));
+    // db.select().from(table).where(not(eq(table.column, 5)));
+    console.log("user id: type", typeof usersTable.id, " type of req.user", typeof req.user?.id)
+    try {
+        const keyword = req.query.search || " "
+        const searchCondition = keyword ? {
+            or: [
+                { name: { like: `%${keyword}%` } },
+                { email: { like: `%${keyword}%` } }
+            ]
+        } : undefined
+        console.log("keyword: ", keyword, "search condition: ", searchCondition)
+
+
+
+        const usersList = await db
+            .select()
+            .from(usersTable)
+            .where(and(not(eq(usersTable.id, parseInt(req.user?.id ?? ""))), or(like(usersTable.name, `%${keyword}%`), like(usersTable.email, `%${keyword}%`))))
+            .execute();
+
+        res.status(200).json(usersList)
+    } catch (error) {
+        res.status(500).json({ error: 'Error retrieving users information' });
+    }
+}
+// user info
+// fetch user with ids
+
+
 router.post('/login', loginUser)
 router.get('/users', getAllUsers)
 router.get('/user_info', fetchuser, getUser);
 router.post("/signup", createUserInfo);
+router.get("/", fetchuser, searchUser)
+router.get("/getUserInfoId/:id", fetchuser, getUserInfoId)
 
 export default router

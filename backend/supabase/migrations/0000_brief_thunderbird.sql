@@ -3,8 +3,7 @@ CREATE TABLE IF NOT EXISTS "chat_table" (
 	"chatName" text NOT NULL,
 	"isGroupChat" boolean DEFAULT false NOT NULL,
 	"users" integer[],
-	"latestMessage" text,
-	"latestMessageId" integer,
+	"latestMessage" integer,
 	"groupAdmin" integer NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL
 );
@@ -47,12 +46,10 @@ CREATE TABLE IF NOT EXISTS "likes_table" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "messages_table" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"sender_id" integer NOT NULL,
-	"receiver_id" integer,
-	"group_id" integer,
-	"content" text NOT NULL,
-	"sentAt" timestamp DEFAULT now() NOT NULL,
-	"read_status" text NOT NULL
+	"sender" integer,
+	"content" text,
+	"chat_id" integer,
+	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "notification_table" (
@@ -98,7 +95,7 @@ CREATE TABLE IF NOT EXISTS "users_table" (
 );
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "chat_table" ADD CONSTRAINT "chat_table_latestMessageId_messages_table_id_fk" FOREIGN KEY ("latestMessageId") REFERENCES "public"."messages_table"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "chat_table" ADD CONSTRAINT "chat_table_latestMessage_messages_table_id_fk" FOREIGN KEY ("latestMessage") REFERENCES "public"."messages_table"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -152,19 +149,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "messages_table" ADD CONSTRAINT "messages_table_sender_id_users_table_id_fk" FOREIGN KEY ("sender_id") REFERENCES "public"."users_table"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "messages_table" ADD CONSTRAINT "messages_table_receiver_id_users_table_id_fk" FOREIGN KEY ("receiver_id") REFERENCES "public"."users_table"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "messages_table" ADD CONSTRAINT "messages_table_group_id_group_table_group_id_fk" FOREIGN KEY ("group_id") REFERENCES "public"."group_table"("group_id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "messages_table" ADD CONSTRAINT "messages_table_sender_users_table_id_fk" FOREIGN KEY ("sender") REFERENCES "public"."users_table"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

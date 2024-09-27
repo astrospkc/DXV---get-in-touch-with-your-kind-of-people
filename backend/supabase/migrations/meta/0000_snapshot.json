@@ -1,5 +1,5 @@
 {
-  "id": "ac08c8cb-a431-4b50-b29e-844b8a82a5bd",
+  "id": "9e1026b6-d57b-4aa4-85c8-ebce6ff7eca7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -35,12 +35,6 @@
         },
         "latestMessage": {
           "name": "latestMessage",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "latestMessageId": {
-          "name": "latestMessageId",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -61,12 +55,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "chat_table_latestMessageId_messages_table_id_fk": {
-          "name": "chat_table_latestMessageId_messages_table_id_fk",
+        "chat_table_latestMessage_messages_table_id_fk": {
+          "name": "chat_table_latestMessage_messages_table_id_fk",
           "tableFrom": "chat_table",
           "tableTo": "messages_table",
           "columnsFrom": [
-            "latestMessageId"
+            "latestMessage"
           ],
           "columnsTo": [
             "id"
@@ -387,20 +381,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "sender_id": {
-          "name": "sender_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "receiver_id": {
-          "name": "receiver_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "group_id": {
-          "name": "group_id",
+        "sender": {
+          "name": "sender",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -409,59 +391,33 @@
           "name": "content",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "sentAt": {
-          "name": "sentAt",
+        "chat_id": {
+          "name": "chat_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "read_status": {
-          "name": "read_status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "messages_table_sender_id_users_table_id_fk": {
-          "name": "messages_table_sender_id_users_table_id_fk",
+        "messages_table_sender_users_table_id_fk": {
+          "name": "messages_table_sender_users_table_id_fk",
           "tableFrom": "messages_table",
           "tableTo": "users_table",
           "columnsFrom": [
-            "sender_id"
+            "sender"
           ],
           "columnsTo": [
             "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "messages_table_receiver_id_users_table_id_fk": {
-          "name": "messages_table_receiver_id_users_table_id_fk",
-          "tableFrom": "messages_table",
-          "tableTo": "users_table",
-          "columnsFrom": [
-            "receiver_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "messages_table_group_id_group_table_group_id_fk": {
-          "name": "messages_table_group_id_group_table_group_id_fk",
-          "tableFrom": "messages_table",
-          "tableTo": "group_table",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "group_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"

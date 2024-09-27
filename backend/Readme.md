@@ -16,3 +16,6 @@ Problems occurred while building this app:
 
 2. applying migrations...PostgresError: column "member_name" of relation "group_member_table" already exists  (This type of problem has really made me feel frustrated) 
    solved: by deleting the last updated snapshot.json file and sql file and edited _journal.json file.
+
+3. while referencing chat.id to message and message.id to chat, encountering "circular import error" -> means circular dependency which is typescript error:
+   - this can be solved using dynamic imports , but no result

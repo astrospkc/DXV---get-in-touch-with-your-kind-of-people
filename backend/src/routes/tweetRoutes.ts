@@ -1,25 +1,16 @@
 import express from 'express'
-
-import { body, validationResult } from "express-validator";
 import { createTweet, getallTweet, getAllTweetSingleUser } from '../db/queries/tweetQueries'
-
-
 import { db } from '../db/db';
-import { tweetTable, usersTable } from '../db/schema';
-import { eq, and } from 'drizzle-orm';
+import { tweetTable, usersTable } from '../db/schema/index';
+import { eq } from 'drizzle-orm';
 import fetchuser from '../../middleware/fetchuser';
-
-// import bcrypt from 'bcryptjs'
-// import jwt from 'jsonwebtoken'
 const router = express.Router()
-
-// const JWT_SECRET = "secret"
 
 // create tweet
 async function createTweets(req: express.Request, res: express.Response) {
     console.log(req.body)
     const { content } = req.body;
-    const userId = req.user?.id;
+    const userId = parseInt(req.user?.id ?? "");
 
 
     if (!content) {
@@ -60,7 +51,7 @@ async function createTweets(req: express.Request, res: express.Response) {
 async function getUserTweets(req: express.Request, res: express.Response) {
     try {
 
-        const tweetId = req.user?.id;
+        const tweetId = parseInt(req.user?.id ?? '');
 
         console.log("id: ", tweetId)
         const tweet = await getAllTweetSingleUser(tweetId);
@@ -90,7 +81,6 @@ async function getAllTweets(req: express.Request, res: express.Response) {
 
 
 router.get('/user_tweets', fetchuser, getUserTweets);
-
 router.get('/tweets', getAllTweets)
 router.post("/insertTweets", fetchuser, createTweets);
 

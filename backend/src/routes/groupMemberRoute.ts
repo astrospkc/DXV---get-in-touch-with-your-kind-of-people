@@ -5,7 +5,7 @@ import { addGroupMembers, getGroupMemberdetails } from '../db/queries/groupMembe
 // import { getTweet } from '../db/queries'
 
 import { db } from '../db/db';
-import { usersTable } from '../db/schema';
+import { usersTable } from '../db/schema/index';
 import { eq, and } from 'drizzle-orm';
 import { get_groups } from '../db/queries/groupQueries';
 import { group } from 'console';
@@ -18,6 +18,28 @@ const router = express.Router()
 // // const JWT_SECRET = "secret"
 
 // // create group
+
+// // adding member to the group -> route: /addGroupMember --half done
+// const addToGroup = async (req: express.Request, res: express.Response) => {
+
+//     const { group_member_id, group_chat_id } = req.body
+
+//     if (!group_member_id || !group_chat_id) {
+//         return res.status(400).json({ error: "All fields are required" })
+//     }
+
+//     // const updatedChat = await db.update(chat).set({
+//     //     users: [...chat.users, group_member_id]
+//     // }).where(eq(chat.id, group_chat_id)).returning()
+
+// }
+
+// // removing member from the group -> route: /rempoveGroupMember
+// const removeGroupMember = async (req: express.Request, res: express.Response) => {
+
+// }
+
+
 async function addGroupMember(req: express.Request, res: express.Response) {
 
     console.log(req.body)
@@ -58,14 +80,14 @@ async function getGroupMemberDetails(req: express.Request, res: express.Response
     console.log(req.user)
     try {
         // first of all get the group info , then get the details through group_id
-        const user_id = req.user?.id;
+        const user_id = parseInt(req.user?.id ?? "");
         console.log("user id: ", user_id)
         const groups = await get_groups(user_id)
         console.log("groups: ", groups)
         const group_members = new Array();
         // now getting the details of the member using group_id
         for (let i = 0; i < groups.length; i++) {
-            const group_id = groups[2]['group_id']
+            const group_id = groups[i]['group_id']
             console.log("group id: ", group_id)
             const groupMembers = await getGroupMemberdetails(group_id)
 

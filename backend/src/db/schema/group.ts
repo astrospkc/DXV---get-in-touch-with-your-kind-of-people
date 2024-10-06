@@ -1,4 +1,4 @@
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 
 import { usersTable } from "./index";
@@ -12,6 +12,8 @@ export const groupTable = pgTable('group_table', {
     group_media_url: text('media_url'),
     github_url: text('github_url').notNull().unique(),
     project_desc: text('project_desc'),
+    // users: integer('users').references(() => usersTable.id).array(),
+    users: jsonb('users').array(),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at')
         .notNull()

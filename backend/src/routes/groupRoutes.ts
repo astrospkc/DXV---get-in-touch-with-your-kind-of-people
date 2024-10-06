@@ -12,10 +12,10 @@ const router = express.Router()
 async function createGroups(req: express.Request, res: express.Response) {
     // console.log(req.user?.groupAdminId)
     console.log(req.body)
-    const { group_name, total_members, group_media_url, github_url } = req.body;
+    const { group_name, total_members, group_media_url, github_url, users } = req.body;
     console.log("admin id: ", req.user?.id)
 
-    if (!group_name || !total_members || !github_url) {
+    if (!group_name || !total_members || !github_url || !users) {
         return res.status(400).json({ error: "All fields are required" })
     }
 
@@ -36,7 +36,8 @@ async function createGroups(req: express.Request, res: express.Response) {
             group_media_url: group_media_url,
             github_url: github_url,
             groupAdminId: admin_id,
-            project_desc: req.body.project_desc
+            project_desc: req.body.project_desc,
+            users: users
         }
     );
     console.log("group:", group)
@@ -115,11 +116,10 @@ async function getUserIdInfo(req: express.Request, res: express.Response) {
     }
 }
 router.get('/groups/:groupid', fetchuser, getGroupInfo);
-
-
 router.post("/createGroup", fetchuser, createGroups);
 router.get("/getAllGroupsOfUser", fetchuser, getAllGroupsOfUser);
 router.get('/getAllGroups', getAllGroups)
 router.get("/getSingleUserInfo/:userId", getUserIdInfo)
+router.get("/getGroupInfo/:groupid", fetchuser, getGroupInfo)
 
 export default router

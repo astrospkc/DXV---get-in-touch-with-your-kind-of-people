@@ -1,10 +1,9 @@
 
-
 import express from 'express'
 import fetchuser from '../../middleware/fetchuser'
 
 import { db } from '../db/db'
-import { sendMessage } from '../db/queries/messageQueries'
+import { fetchAllMessagesById, sendMessage } from '../db/queries/messageQueries'
 import { desc, eq } from 'drizzle-orm';
 import { chat, message } from '../db/schema/index';
 
@@ -51,19 +50,22 @@ const SendMessage = async (req: express.Request, res: express.Response) => {
 }
 
 //all message
-const FetchAllMessages = async (req: express.Request, res: express.Response) => {
+
+export const FetchAllMessages = async (req: express.Request, res: express.Response) => {
     const { id } = req.params
     const numericId = parseInt(id, 10)
     console.log("id: ", typeof id, "numericId: ", numericId)
     try {
         // fetching all messages using chatId in descending order
-        const allMessages = await db.select().from(message).orderBy(desc(message.createdAt)).where(eq(message.chat, numericId)).execute()
+        // const allMessages = await db.select().from(message).orderBy(desc(message.createdAt)).where(eq(message.chat, numericId)).execute()
+        const allMessages = await fetchAllMessagesById(numericId)
         res.status(200).json({ messages: allMessages })
 
     } catch (error) {
         throw new Error("messages not fetched")
     }
 }
+
 
 router.post("/sendMessage", fetchuser, SendMessage)
 router.get("/fetchMessages/:id", fetchuser, FetchAllMessages)

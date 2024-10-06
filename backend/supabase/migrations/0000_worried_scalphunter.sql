@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS "chat_table" (
 	"users" integer[],
 	"latestMessage" integer,
 	"groupAdmin" integer NOT NULL,
-	"createdAt" timestamp DEFAULT now() NOT NULL
+	"createdAt" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "chat_table_chatName_unique" UNIQUE("chatName")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "comments_table" (
@@ -20,6 +21,7 @@ CREATE TABLE IF NOT EXISTS "comments_table" (
 CREATE TABLE IF NOT EXISTS "group_member_table" (
 	"member_id" integer PRIMARY KEY NOT NULL,
 	"group_id" integer NOT NULL,
+	"users" integer[],
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
@@ -31,6 +33,7 @@ CREATE TABLE IF NOT EXISTS "group_table" (
 	"media_url" text,
 	"github_url" text NOT NULL,
 	"project_desc" text,
+	"users" jsonb[],
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp NOT NULL,
 	CONSTRAINT "group_table_group_name_unique" UNIQUE("group_name"),

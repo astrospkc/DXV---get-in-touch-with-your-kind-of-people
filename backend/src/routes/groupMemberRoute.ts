@@ -1,7 +1,7 @@
 import express from 'express'
 
 import { body, validationResult } from "express-validator";
-import { addGroupMembers, getGroupMemberdetails } from '../db/queries/groupMemberQueries'
+import { addGroupMembers, getGroupMemberdetails, getGroupMemebersId } from '../db/queries/groupMemberQueries'
 // import { getTweet } from '../db/queries'
 
 import { db } from '../db/db';
@@ -10,6 +10,7 @@ import { eq, and } from 'drizzle-orm';
 import { get_groups } from '../db/queries/groupQueries';
 import { group } from 'console';
 import fetchuser from '../../middleware/fetchuser';
+import { getUserInfo } from '../db/queries/userQueries';
 
 // import bcrypt from 'bcryptjs'
 // import jwt from 'jsonwebtoken'
@@ -51,22 +52,58 @@ async function addGroupMember(req: express.Request, res: express.Response) {
             return res.status(400).json({ error: "All fields are required" })
         }
 
+
+
         // check if user exists or not
-        const memberData = await db.select().from(usersTable).where(eq(usersTable.id, group_member_id)).limit(1).execute()
-        console.log("member data: ", memberData)
+        const memberData = await db.select({
+            id: usersTable.id,
+            name: usersTable.name,
+            username: usersTable.username,
+            email: usersTable.email,
+            media_url: usersTable.media_url,
+
+        }).from(usersTable).where(eq(usersTable.id, group_member_id)).limit(1).execute()
+        // console.log("member data: ", memberData)
         if (memberData.length === 0) {
             return res.status(404).json({ error: "User not found" });
         }
 
-        const groupMember = await addGroupMembers(
+        // add group member
+        await addGroupMembers(
             {
                 group_member_id: group_member_id,
                 group_id: group_id,
 
+
             }
         );
-        console.log("group member:", groupMember)
-        res.json(groupMember);
+        // console.log("group member:", groupMember)
+
+        // all the group member ids 
+        // using these ids getting the user information
+        const groupMemberids = await getGroupMemebersId(
+            {
+                group_member_id: group_member_id,
+                group_id: group_id,
+
+
+            }
+        )
+        // console.log("gotcha", groupMemberids)
+
+
+        // adding all the users details to the userids
+        let groupUserInfo: any[] = [];
+        for (let id of groupMemberids) {
+            const user = await getUserInfo(id)
+            console.log("user: in gui", user[0])
+            groupUserInfo.push(user)
+        }
+
+        console.log("group user info: ", groupUserInfo)
+
+        res.json(groupUserInfo);
+
     } catch (error) {
         console.error("Error adding group member: check if the group_id  is present in the table or not ", error); // Log the error for debugging
         return res.status(500).json({ error: ' Error creating member information -> check if the group_id  is present in the table or not' });;

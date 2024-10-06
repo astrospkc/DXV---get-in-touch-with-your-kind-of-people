@@ -6,7 +6,7 @@ import { relations } from "drizzle-orm";
 
 export const chat = pgTable("chat_table", {
     id: serial("id").notNull().primaryKey(),
-    chatName: text("chatName").notNull(),
+    chatName: text("chatName").unique().notNull(),
     isGroupChat: boolean("isGroupChat").notNull().default(false),
     // users: text("users").notNull(),
     users: integer("users").references(() => usersTable.id).array(),

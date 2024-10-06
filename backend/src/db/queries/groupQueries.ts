@@ -1,6 +1,6 @@
 import { groupMemberTable } from './../schema';
 import { db } from '../db';
-import { groupTable, InsertGroup, InsertPost, InsertTweet, InsertUser, postsTable, tweetTable, usersTable } from '../schema';
+import { groupTable, InsertGroup, InsertPost, InsertTweet, InsertUsers, postsTable, tweetTable, usersTable } from '../schema';
 import { eq, desc } from 'drizzle-orm';
 
 
@@ -10,14 +10,14 @@ export async function createGroup(data: InsertGroup) {
     return data
 }
 
-export async function getGroupDetail(groupId: Number) {
+export async function getGroupDetail(groupId: number) {
     console.log("group id: ", groupId)
     return await db.select().from(groupTable).where(eq(groupTable.groupAdminId, groupId)).limit(1).execute();
 }
 
 
 // this get groups signifies all the groups that a user has created
-export async function get_groups(userId: Number) {
+export async function get_groups(userId: number) {
     console.log("groupId: ", userId)
     return await db.select().from(groupTable).where(eq(groupTable.groupAdminId, userId)).orderBy(desc(groupTable.createdAt)).execute()
 }

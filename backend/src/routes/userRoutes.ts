@@ -22,6 +22,12 @@ declare global {
 
 const JWT_SECRET = process.env.JWT_SECRETT
 
+// for testing purpose
+
+export function test(req: express.Request, res: express.Response) {
+    res.send("test route")
+}
+
 async function createUserInfo(req: express.Request, res: express.Response) {
     try {
 
@@ -194,7 +200,7 @@ async function searchUser(req: express.Request, res: express.Response) {
 // user info
 // fetch user with ids
 
-
+router.get("/test", test)
 router.post('/login', loginUser)
 router.get('/users', getAllUsers)
 router.get('/user_info', fetchuser, getUser);

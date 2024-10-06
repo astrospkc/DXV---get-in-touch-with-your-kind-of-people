@@ -1,16 +1,18 @@
 import { db } from '../db';
-import { groupTable, InsertGroup, InsertPost, InsertTweet, InsertUser, postsTable, tweetTable, usersTable } from '../schema';
+import { InsertUsers, usersTable } from '../schema/index';
 import { eq } from 'drizzle-orm';
 
 // user queries: 
 
-export async function createUser(data: InsertUser) {
+
+
+export async function createUser(data: InsertUsers) {
     await db.insert(usersTable).values(data);
     console.log("data: ", data)
     return data
 }
 
-export async function getUserInfo(userId: Number) {
+export async function getUserInfo(userId: number) {
     console.log("userId: ", userId)
     // return await db.select({id, name, username, media_url}).from(usersTable).where(eq(usersTable.id, userId)).limit(1).execute();
     try {
@@ -46,7 +48,7 @@ export async function getallUsers() {
     }
 }
 
-export async function checkUser(username: String) {
+export async function checkUser(username: string) {
     console.log("username : ", username)
     try {
         return await db.select().from(usersTable).where(eq(usersTable.username, username)).limit(1).execute()

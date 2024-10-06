@@ -1,5 +1,5 @@
 {
-  "id": "9e1026b6-d57b-4aa4-85c8-ebce6ff7eca7",
+  "id": "11004e21-2a7d-4cc7-86c3-5a4aadb568a6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -83,7 +83,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "chat_table_chatName_unique": {
+          "name": "chat_table_chatName_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "chatName"
+          ]
+        }
+      }
     },
     "public.comments_table": {
       "name": "comments_table",
@@ -175,6 +183,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "users": {
+          "name": "users",
+          "type": "integer[]",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -258,6 +272,12 @@
         "project_desc": {
           "name": "project_desc",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "users": {
+          "name": "users",
+          "type": "jsonb[]",
           "primaryKey": false,
           "notNull": false
         },

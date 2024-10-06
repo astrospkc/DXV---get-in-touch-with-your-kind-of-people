@@ -13,6 +13,7 @@ import cors from 'cors';
 
 const allowedOrigins = "http://localhost:3000"
 
+const PORT = 7000
 const app = express();
 
 app.use(
@@ -46,8 +47,8 @@ app.get("/", async (req, res) => {
     res.send("hi homepage ")
     console.log("this is homepage")
 })
-const server = app.listen(8000, () => {
-    console.log("Server started on port 8000");
+const server = app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`);
 });
 
 // new instance of socket.io by passing the server object. listen on the connection event for incoming sockets

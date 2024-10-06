@@ -30,6 +30,7 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import ProfileInfo from "./ProfileInfo"
 
 export function DropDown() {
     return (
@@ -43,7 +44,8 @@ export function DropDown() {
                 <DropdownMenuGroup>
                     <DropdownMenuItem>
                         <User className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
+                        <ProfileInfo />
+                        {/* <span>Profile</span> */}
                         <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     {/* <DropdownMenuItem>

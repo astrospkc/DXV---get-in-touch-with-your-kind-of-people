@@ -65,13 +65,13 @@ interface Item {
     // Add other properties as needed
 }
 
-import {LoaderContext} from "@/context/LoaderState"
+import { LoaderContext } from "@/context/LoaderState"
 
 const TweetCard = () => {
     const [data, setData] = useState<Item[]>([])
     const tweet_context = useContext(TweetContext)
     const { getTweets, setGetTweets, getAllTweets } = tweet_context
-    const {isLoading, setIsLoading} =useContext(LoaderContext)
+    const { isLoading, setIsLoading } = useContext(LoaderContext)
     console.log("get tweets: ", getTweets)
     // handling api calls: 
     useEffect(() => {
@@ -85,12 +85,12 @@ const TweetCard = () => {
     return (
         <>{
             isLoading ? <div>...isLoading</div> :
-            <>
-            {getTweets && getTweets.map((ele) => {
-                return (
-                    <div className='m-2  p-3  flex flex-row bg-gradient-to-r from-pink-600 to-black rounded-2xl ' key={ele.id}>
+                <>
+                    {getTweets && getTweets.map((ele) => {
+                        return (
+                            <div className='m-4  p-3  flex flex-row bg-black rounded-2xl ' key={ele.id}>
 
-                        {/* 1. Avatar
+                                {/* 1. Avatar
                 2. the smaller main content
                     i. username, holder name data, groupname
                     ii. the main content , tweet
@@ -98,36 +98,36 @@ const TweetCard = () => {
         
             */}
 
-                        <div className=''>
-                            <h1 className='w-fit p-2 bg-black text-white rounded-full'>Avatar</h1>
-                        </div>
-                        <div className='w-full'>
-                            <div className='flex flex-row border-b-2 border-b-black text-sm m-2 p-3 gap-4'>
-                                <div className='flex flex-col'><h1>Holder name</h1>
-                                    <h1>@Username</h1></div>
-                                <div className='flex flex-row gap-4'>
-                                    <h1>--group name</h1>
-                                    <h1>date</h1>
+                                <div className=''>
+                                    <h1 className='w-fit p-2 bg-black text-white rounded-full'>Avatar</h1>
+                                </div>
+                                <div className='w-full'>
+                                    <div className='flex flex-row border-b-2 border-b-black text-sm m-2 p-3 gap-4'>
+                                        <div className='flex flex-col'><h1>Holder name</h1>
+                                            <h1>@Username</h1></div>
+                                        <div className='flex flex-row gap-4'>
+                                            <h1>--group name</h1>
+                                            <h1>date</h1>
+                                        </div>
+
+                                    </div>
+                                    <div className='bg-black m-2 p-4 rounded-3xl'>{ele.content}</div>
+
+                                    <div>
+
+                                        <Tooltips />
+
+
+                                    </div>
                                 </div>
 
-                            </div>
-                            <div className='bg-black m-2 p-4 rounded-3xl'>{ele.content}</div>
-
-                            <div>
-
-                                <Tooltips />
-
 
                             </div>
-                        </div>
-
-
-                    </div>
-                )
-            })} </>
+                        )
+                    })} </>
 
         }
-            
+
 
         </>
 

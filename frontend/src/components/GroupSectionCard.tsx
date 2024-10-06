@@ -30,7 +30,7 @@ const GroupSectionCard = () => {
             {allGroups.map((ele) => (
                 <div
                     key={ele.group_id}
-                    className='flex flex-row text-sm justify-items-center border-2 rounded-2xl hover:bg-gradient-to-r from-indigo-950 to-red-500 p-2 hover:cursor-pointer my-3'
+                    className='flex flex-row text-sm justify-items-center shadow-lg shadow-black rounded-2xl hover:bg-gradient-to-r from-indigo-950 to-red-500 p-2 hover:cursor-pointer my-3'
                 >
                     <div className='w-fit p-4 bg-black rounded-full border-2'>Avatar</div>
                     <div className='mx-2 hover:text-black'>

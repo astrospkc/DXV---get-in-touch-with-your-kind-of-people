@@ -28,7 +28,7 @@ export default function Login() {
     let data: any;
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const res = await fetch("http://localhost:8000/api/login", {
+        const res = await fetch("http://localhost:7000/api/login", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -48,7 +48,7 @@ export default function Login() {
             setIsLoading(true)
 
             localStorage.setItem("token", data.authtoken)
-            
+
             alert("happy logged in")
 
             router.push("/dashboard")
@@ -80,8 +80,8 @@ export default function Login() {
 
     }
 
-    const handleLoader =(e)=>{
-        setIsLoading((prev)=>!prev)
+    const handleLoader = (e) => {
+        setIsLoading((prev) => !prev)
     }
 
 

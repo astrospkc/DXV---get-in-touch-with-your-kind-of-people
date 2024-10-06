@@ -26,7 +26,7 @@ function TweetState({ children }: { children: React.ReactNode }) {
     const getAllTweets = async () => {
 
 
-        const res = await fetch("http://localhost:8000/tweet/tweets")
+        const res = await fetch(`http://localhost:7000/tweet/tweets`)
         const data = await res.json();
         console.log(data)
         setGetTweets(data)
@@ -40,7 +40,7 @@ function TweetState({ children }: { children: React.ReactNode }) {
         const { media_url, content, num_likes } = props;
         const token = localStorage.getItem("token")
         console.log("token: ", token)
-        const res = await fetch("http://localhost:8000/tweet/insertTweets", {
+        const res = await fetch(`http://localhost:7000/tweet/insertTweets`, {
             method: 'POST',
 
             headers: {
@@ -70,7 +70,7 @@ function TweetState({ children }: { children: React.ReactNode }) {
     const getUserTweets = async () => {
         const token = localStorage.getItem("token")
         console.log("token: ", token)
-        const res = await fetch("http://localhost:8000/tweet/user_tweets", {
+        const res = await fetch(`http://localhost:7000/tweet/user_tweets`, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json',

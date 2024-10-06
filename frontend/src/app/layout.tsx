@@ -1,10 +1,12 @@
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "next-themes";
 import Header from "@/components/Header";
-
+import { Providers } from "./providers";
+import { ChatProvider } from "@/context/ChatState";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -27,9 +29,18 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="">
-            {children}
-          </div>
+          <Providers>
+            <ChatProvider>
+              <div className="flex h-screen justify-center items-center m-auto">
+                {children}
+              </div>
+
+            </ChatProvider>
+
+
+
+          </Providers>
+
 
         </ThemeProvider>
       </body>

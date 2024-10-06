@@ -1,16 +1,19 @@
 'use client'
-import React from 'react'
+import React, { useContext } from 'react'
 
 import MainContent from '@/components/MainContent'
+// import { GroupContext } from '@/context/GroupState'
 
 
 
-const dashboard = () => {
+const Dashboard = () => {
+  // const { groupInfo } = useContext(GroupContext)
+  // console.log("group info in dashboard: ", groupInfo)
 
   return (
 
-    
-    <div className=' ' suppressHydrationWarning={true}>
+
+    <div className='bg-black ' suppressHydrationWarning={true} >
       <MainContent />
 
     </div>
@@ -20,4 +23,4 @@ const dashboard = () => {
   )
 }
 
-export default dashboard
+export default Dashboard

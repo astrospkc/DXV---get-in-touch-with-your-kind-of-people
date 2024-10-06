@@ -1,16 +1,17 @@
 "use client"
 import { createContext, useEffect, useState } from 'react'
 
-const UserContext = createContext([])
+const UserContext = createContext(null)
 
-const UserState = ({ children }) => {
+const UserState = ({ children }: any) => {
     const [user, setUser] = useState({})
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
 
 
     const fetchUserDetails = async () => {
         const token = localStorage.getItem("token");
         console.log('token in userstate: ', token)
-        const response = await fetch("http://localhost:8000/api/user_info", {
+        const response = await fetch(`http://localhost:7000/api/user_info`, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json',
@@ -26,13 +27,14 @@ const UserState = ({ children }) => {
         setUser(userDetails);
         console.log('User details: ', userDetails);
     };
+    console.log("user: ", user)
 
 
 
 
     return (
 
-        <UserContext.Provider value={{ user, setUser, fetchUserDetails }}>
+        <UserContext.Provider value={{ user, setUser, fetchUserDetails, isAuthenticated, setIsAuthenticated }}>
             {children}
         </UserContext.Provider>
     )

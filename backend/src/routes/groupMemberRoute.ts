@@ -10,7 +10,8 @@ import { eq, and } from 'drizzle-orm';
 import { get_groups } from '../db/queries/groupQueries';
 import { group } from 'console';
 import fetchuser from '../../middleware/fetchuser';
-import { getUserInfo } from '../db/queries/userQueries';
+import { getUserInfoWithId } from '../db/queries/userQueries';
+
 
 // import bcrypt from 'bcryptjs'
 // import jwt from 'jsonwebtoken'
@@ -95,7 +96,7 @@ async function addGroupMember(req: express.Request, res: express.Response) {
         // adding all the users details to the userids
         let groupUserInfo: any[] = [];
         for (let id of groupMemberids) {
-            const user = await getUserInfo(id)
+            const user = await getUserInfoWithId(id)
             console.log("user: in gui", user[0])
             groupUserInfo.push(user)
         }

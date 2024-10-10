@@ -6,6 +6,8 @@ import { db } from '../db/db'
 import { fetchAllMessagesById, sendMessage } from '../db/queries/messageQueries'
 import { desc, eq } from 'drizzle-orm';
 import { chat, message } from '../db/schema/index';
+import { fetchChatDetails } from '../db/queries/chatQueries';
+import { getUserInfoWithId, usersDetails } from '../db/queries/userQueries';
 
 const router = express.Router()
 
@@ -29,13 +31,52 @@ const SendMessage = async (req: express.Request, res: express.Response) => {
                 latestMessage: chatId
             }).execute()
 
-
+            let msgDetails = [];
             // now here I want to update the content in the message table
+            // message info : contains-> id, sender, content, chat, createdAt
+            const sender_id = parseInt(req.user?.id ?? '')
+            const sender_data = await getUserInfoWithId(sender_id)
+
+            // chat details with chatId
+            const chatDetails = fetchChatDetails(chatId)
             const msg1 = await db.insert(message).values({
-                sender: parseInt(req.user?.id ?? ''),
+                sender_id: parseInt(req.user?.id ?? ''),
+                sender: sender_data,
                 content: content,
-                chat: chatId
+                chat: chatDetails
             }).returning()
+            console.log("msg1: ", msg1)
+            // msgDetails.push({ msg: msg1[0] })
+
+
+            // // chat info
+            // const chat_id: number = msg1[0].chat
+            // const chatdetails = await fetchChatDetails(chat_id)
+
+            // // getting the user details and pushing it to the msgDetails
+            // const users_arr = chatdetails.chat.users
+            // console.log("array: ", users_arr)
+            // const usersDetails_arr = await usersDetails(users_arr)
+
+
+            // // getting the admin details
+            // const admin = usersDetails_arr[usersDetails_arr.length - 1]
+
+            // const data = {
+            //     id: msg1[0].id,
+            //     chatName: chatdetails.chat.chatName,
+            //     isGroupChat: chatdetails.chat.isGroupChat,
+            //     users: usersDetails_arr,
+            //     latestMessage: msg1[0].content,
+            //     groupAdmin: {
+            //         id: admin.id,
+            //         name: admin.name,
+            //         username: admin.username,
+            //         email: admin.email,
+            //         pic: admin.media_url
+            //     }
+            // }
+
             res.status(200).send(msg1)
         } else {
             res.status(400).send("chat not found, no msg can be inserted")
@@ -59,6 +100,10 @@ export const FetchAllMessages = async (req: express.Request, res: express.Respon
         // fetching all messages using chatId in descending order
         // const allMessages = await db.select().from(message).orderBy(desc(message.createdAt)).where(eq(message.chat, numericId)).execute()
         const allMessages = await fetchAllMessagesById(numericId)
+        // id , sender, content, chat, createdAt
+        let data = {
+            id: allMessages
+        }
         res.status(200).json({ messages: allMessages })
 
     } catch (error) {

@@ -21,7 +21,5 @@ export const fetchAllMessagesById = async (id: Number) => {
         return allMessages
     } catch (error) {
         throw new Error("messages not fetched")
-
-
     }
 }

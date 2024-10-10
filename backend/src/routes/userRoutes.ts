@@ -1,6 +1,6 @@
 import { usersTable } from './../db/schema/index';
 import express from 'express'
-import { checkUser, createUser, getallUsers, getUserInfo } from '../db/queries/userQueries'
+import { checkUser, createUser, getallUsers, getUserInfoWithId } from '../db/queries/userQueries'
 import { db } from '../db/db';
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
@@ -85,7 +85,7 @@ async function loginUser(req: express.Request, res: express.Response) {
         }
 
 
-        const passwordChecker = await bcrypt.compareSync(password, userExist[0].password)
+        const passwordChecker = bcrypt.compareSync(password, userExist[0].password)
         console.log("login password checker: ", passwordChecker)
 
         if (!passwordChecker) {
@@ -140,13 +140,7 @@ async function getUser(req: express.Request, res: express.Response) {
 async function getUserInfoId(req: express.Request, res: express.Response) {
     try {
         const id = parseInt(req.params.id)
-        const user = await db.select({
-            id: usersTable.id,
-            name: usersTable.name,
-            username: usersTable.username,
-            email: usersTable.email,
-            media_url: usersTable.media_url
-        }).from(usersTable).where(eq(usersTable.id, id)).limit(1).execute()
+        const user = await getUserInfoWithId(id)
 
         res.status(200).json(user)
     } catch (error) {

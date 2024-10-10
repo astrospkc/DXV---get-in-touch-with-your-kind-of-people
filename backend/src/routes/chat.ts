@@ -4,9 +4,10 @@ import express from 'express'
 import { db } from '../db/db'
 import fetchuser from '../../middleware/fetchuser';
 import { eq } from 'drizzle-orm';
-import { fetchChat } from '../db/queries/chatQueries';
-import { getUserInfo } from '../db/queries/userQueries';
+import { fetchChat, fetchChatDetails } from '../db/queries/chatQueries';
+import { getUserInfoWithId, usersDetails } from '../db/queries/userQueries';
 import { fetchAllMessagesById } from '../db/queries/messageQueries';
+import { group } from 'console';
 
 
 // import { body, validationResult } from "express-validator";
@@ -14,7 +15,7 @@ import { fetchAllMessagesById } from '../db/queries/messageQueries';
 const router = express.Router()
 
 // creating chat -> route: /createChat
-async function CreateChat(req: express.Request, res: express.Response, next: express.NextFunction) {
+async function AccessChat(req: express.Request, res: express.Response, next: express.NextFunction) {
     // geetting the userId from the body
     const { userId } = req.body;
 
@@ -35,8 +36,6 @@ async function CreateChat(req: express.Request, res: express.Response, next: exp
         })
         console.log("is chat: ", isChat)
 
-
-
         // if exist then return the chat and user details 
         if (isChat?.length > 0) {
             let userDetails: any[] = []
@@ -50,7 +49,7 @@ async function CreateChat(req: express.Request, res: express.Response, next: exp
                     // fetch user details for the provided user ids
 
                     for (let i = 0; i < userIds.length; i++) {
-                        const user = await getUserInfo(userIds[i]);
+                        const user = await getUserInfoWithId(userIds[i]);
                         userDetails.push(user);
                     }
                     console.log("user Details :", userDetails)
@@ -60,7 +59,20 @@ async function CreateChat(req: express.Request, res: express.Response, next: exp
                     throw error
                 }
             }
-            return res.status(200).json({ success: true, chat: isChat[0], users: userDetails })
+
+
+
+            let data = {
+                id: isChat[0].id,
+                chatName: isChat[0].chatName,
+                isGroupChat: isChat[0].isGroupChat,
+                users: userDetails,
+                latestMessage: isChat[0].latestMessage,
+                groupAdmin: userDetails[0],
+                createdAt: isChat[0].createdAt
+            }
+
+            return res.status(200).json({ success: true, chat: data })
         }
 
         // If chat does not exist, create a new chat
@@ -69,29 +81,42 @@ async function CreateChat(req: express.Request, res: express.Response, next: exp
             const users = [u_id, userId]
             const chatName = await db.select({ username: usersTable.username }).from(usersTable).where(eq(usersTable.id, userId))
             console.log("chatname: ", chatName)
+
+            // fetching the user details with users which contains userIds
+            let userDetails = []
+            for (let i = 0; i < users.length; i++) {
+                const user = await getUserInfoWithId(users[i])
+                userDetails.push(user)
+            }
+            console.log("user details of the new chat: ", userDetails)
+
+            const admin = await getUserInfoWithId(u_id)
             const newChat = await db.insert(chat).values(
                 {
                     chatName: chatName[0].username,
                     isGroupChat: false,
-                    groupAdmin: parseInt(u_id, 10), // Parse u_id to a number
+                    groupAdmin: admin, // 
                     users: users,
+                    usersInfo: usersDetails
 
                 }).returning();
             console.log("new chat: ", newChat)
 
-            // fetching user details for the new chat
-            const userIds = users
-            if (userIds) {
-                let userDetails = []
-                for (let i = 0; i < userIds.length; i++) {
-                    const user = await getUserInfo(userIds[i])
-                    userDetails.push(user)
-                }
-                console.log("user details of the new chat: ", userDetails)
-                return res.status(201).json({ chat: newChat, users: userDetails });
-            } else {
-                return res.status(404).json({ message: "userIds are null" });
+
+
+
+            let data = {
+                id: newChat[0].id,
+                chatName: newChat[0].chatName,
+                isGroupChat: newChat[0].isGroupChat,
+                users: userDetails,
+                latestMessage: newChat[0].latestMessage,
+                groupAdmin: userDetails[0],
+                createdAt: newChat[0].createdAt
+
             }
+            return res.status(201).json({ chat: data });
+
             // return res.status(201).json({ chat: newChat, users: userDetails });
         } else {
             return res.status(404).json({ message: "groupAdmin  undefined" });
@@ -109,16 +134,24 @@ async function CreateChat(req: express.Request, res: express.Response, next: exp
 // when fetching chat , all the users must have latest Message , 
 // - chatid
 // fetch all messages using chatid
+// return -> id, chatName, isGroupChat, groupAdmin details, users details, latestMessages and senders details.
+
+
 async function FetchChats(req: express.Request, res: express.Response) {
-    const userId = req.user?.id
+    const userId = parseInt(req.user?.id ?? '')
     try {
         const chats = await fetchChat(userId)
         console.log("chats: ", chats)
 
         // getting the result of chatId:
-        const chatId = chats[0].latestMessage
+        let chatId
+        if (chats.length > 0) {
+            chatId = chats[0].latestMessage
+        }
+
         if (chatId) {
             const latestMessageRes = await fetchAllMessagesById(chatId)
+            console.log("latestmessage res: ", latestMessageRes)
             res.status(200).send(latestMessageRes)
         } else {
             return res.status(404).json({ message: "chatId is null" });
@@ -217,7 +250,23 @@ const RenameGroup = async (req: express.Request, res: express.Response) => {
     }
 }
 
-router.post("/createChat", fetchuser, CreateChat)
+// fetch chat details by chatId -> route: /chatDetails/:id
+const FetchChatDetails = async (req: express.Request, res: express.Response) => {
+    const { id } = req.params
+    const numericId = parseInt(id, 10)
+    try {
+        const chatdetails = await fetchChatDetails(numericId)
+        console.log("chat details: ", chatdetails)
+        res.status(200).json({ chat: chatdetails })
+        // return chatdetails
+
+    } catch (error) {
+        console.error("error fetching the chat details: ", error)
+    }
+}
+
+router.get("/chatDetails/:id", fetchuser, FetchChatDetails)
+router.post("/createChat", fetchuser, AccessChat)
 router.get("/fetchChats", fetchuser, FetchChats)
 router.get("/fetchUsersChats", fetchuser, fetchUsersChats)
 router.post("/createGroupChat", fetchuser, CreateGroupChat)

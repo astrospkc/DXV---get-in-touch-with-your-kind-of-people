@@ -10,9 +10,9 @@ export const chat = pgTable("chat_table", {
     isGroupChat: boolean("isGroupChat").notNull().default(false),
     // users: text("users").notNull(),
     users: integer("users").references(() => usersTable.id).array(),
-
+    usersInfo: jsonb("users_info").array(),
     latestMessage: integer("latestMessage").references(() => message.id),
-    groupAdmin: integer("groupAdmin").references(() => usersTable.id).notNull(),
+    groupAdmin: jsonb("group_admin"),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
 
 })

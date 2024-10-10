@@ -4,7 +4,7 @@ import { db } from '../db/db';
 import { usersTable } from '../db/schema/index';
 import { eq } from 'drizzle-orm';
 import fetchuser from '../../middleware/fetchuser';
-import { getUserInfo } from '../db/queries/userQueries';
+import { getUserInfoWithId } from '../db/queries/userQueries';
 const router = express.Router()
 
 
@@ -103,7 +103,7 @@ async function getUserIdInfo(req: express.Request, res: express.Response) {
     try {
         const userId = parseInt(req.params.userId ?? '')
         console.log("user id: ", userId)
-        const user = await getUserInfo(userId)
+        const user = await getUserInfoWithId(userId)
         console.log("user", user)
         if (!user) {
             return res.status(404).json({ error: 'User not found' });

@@ -3,23 +3,26 @@ import { db } from "../db";
 import { chat, InsertChat } from "../schema/index";
 import { desc, asc } from 'drizzle-orm';
 
-
+// careating chat 
 export async function createChat(data: InsertChat) {
     console.log("create chat  data: ", data)
     return await db.insert(chat).values(data)
 
 }
 
-export async function fetchChat(userId) {
+// fetching chat with chat id
+export async function fetchChat(userId: number) {
 
     const data = await db.select().from(chat).where(arrayContains(chat.users, [userId]))
-    // const data = await db.query.chat.findMany({
-    //     where: (users) => {
-    //         return arrayContains(users.users, [userId])
-    //     }
-    // })
     return data
 
+}
+
+// chat details using chatId
+export async function fetchChatDetails(chatId: number) {
+
+    const chatDetails = await db.select().from(chat).where(eq(chat.id, chatId)).limit(1).execute()
+    return { chat: chatDetails[0] }
 }
 
 // export async function createGroup_Chat(data: InsertChat) {

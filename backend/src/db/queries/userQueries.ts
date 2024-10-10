@@ -12,7 +12,7 @@ export async function createUser(data: InsertUsers) {
     return data
 }
 
-export async function getUserInfo(userId: number) {
+export async function getUserInfoWithId(userId: number) {
     console.log("userId: ", userId)
     // return await db.select({id, name, username, media_url}).from(usersTable).where(eq(usersTable.id, userId)).limit(1).execute();
     try {
@@ -30,6 +30,18 @@ export async function getUserInfo(userId: number) {
         throw new Error('Failed to fetch user information');
     }
 }
+
+export async function usersDetails(users_arr: number[]) {
+    let arr = []
+    for (let i = 0; i < users_arr.length; i++) {
+        let data = await getUserInfoWithId(users_arr[i])
+        arr.push(data[0])
+    }
+
+    return arr
+}
+
+
 
 export async function getallUsers() {
     try {

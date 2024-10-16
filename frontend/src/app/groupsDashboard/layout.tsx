@@ -1,16 +1,13 @@
 "use client"
 
 import Header from "@/components/Header";
-import { ReactNode, useState, useEffect } from "react";
+import { ReactNode, useState, useEffect, useContext } from "react";
 import "@/app/globals.css"
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { GroupState } from "@/context/GroupState";
-import { UserState } from "@/context/UserState";
-import { TweetState } from "@/context/TweetState";
-import { LoaderState } from "@/context/LoaderState";
+import { UserContext, UserState } from "@/context/UserState";
+
 import GroupsLeftBar from "@/components/GroupsLeftBar";
-import { ChatProvider } from "@/context/ChatState";
 
 
 
@@ -28,52 +25,31 @@ type GroupDashboardLayoutProps = {
 export default function GroupDashboardLayout({ children }: GroupDashboardLayoutProps) {
 
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        console.log("token: ", token)
-        setIsAuthenticated(!!token)
-
-    }, [])
-
+    // const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const { isAuthenticated } = useContext(UserContext)
     console.log("is authenticated: ", isAuthenticated)
+
+
+
     return (
-        <ChatProvider>
-            <LoaderState>
 
+        <div className="flex flex-col h-screen w-screen ">
 
-                <UserState>
-                    <TweetState>
+            <Header />
+            <div className="flex flex-1 flex-row overflow-y-hidden">
+                <div className="w-1/5  overflow-y-hidden border-r-2"><GroupsLeftBar /></div>
+                {
+                    !isAuthenticated ?
 
+                        <div className="w-3/5  flex flex-col h-full overflow-y-scroll border-r-2 bg-violet-400 justify-center items-center m-auto text-xl text-center ">Its a groups dashboardAuthenticate yourself first by login or signup , we would be happy to share the interesting ideas.
+                            <Link href="/"><Button>Go Back</Button></Link>
+                        </div>
+                        :
+                        <div className="w-3/5  flex-1 overflow-y-scroll border-r-2 bg-gray-900 ">{children}</div>
 
+                }
 
-                        <GroupState>
-                            <div className="flex flex-col h-screen w-screen ">
-
-                                <Header />
-                                <div className="flex flex-1 flex-row overflow-y-hidden">
-                                    <div className="w-1/5  overflow-y-hidden border-r-2"><GroupsLeftBar /></div>
-                                    {
-                                        !isAuthenticated ?
-
-                                            <div className="w-3/5  flex flex-col h-full overflow-y-scroll border-r-2 bg-violet-400 justify-center items-center m-auto text-xl text-center ">Its a groups dashboardAuthenticate yourself first by login or signup , we would be happy to share the interesting ideas.
-                                                <Link href="/"><Button>Go Back</Button></Link>
-                                            </div>
-                                            :
-                                            <div className="w-3/5  flex-1 overflow-y-scroll border-r-2 bg-gray-900 ">{children}</div>
-
-                                    }
-
-                                </div>
-                            </div>
-                        </GroupState>
-                    </TweetState>
-                </UserState>
-            </LoaderState>
-
-        </ChatProvider>
-
-
-
+            </div>
+        </div>
     );
 }

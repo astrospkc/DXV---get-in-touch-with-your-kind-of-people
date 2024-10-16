@@ -19,14 +19,14 @@ interface TweetContextType {
 const TweetContext = createContext<TweetContextType | undefined>(undefined);
 function TweetState({ children }: { children: React.ReactNode }) {
 
-    const [getTweets, setGetTweets] = useState<Item[]>([])
+    const [getTweets, setGetTweets] = useState([])
     const [createTweet, setCreateTweet] = useState({});
     const [userTweets, setUserTweets] = useState([])
 
     const getAllTweets = async () => {
 
 
-        const res = await fetch(`http://localhost:7000/tweet/tweets`)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/tweet/tweets`)
         const data = await res.json();
         console.log(data)
         setGetTweets(data)
@@ -40,7 +40,7 @@ function TweetState({ children }: { children: React.ReactNode }) {
         const { media_url, content, num_likes } = props;
         const token = localStorage.getItem("token")
         console.log("token: ", token)
-        const res = await fetch(`http://localhost:7000/tweet/insertTweets`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/tweet/insertTweets`, {
             method: 'POST',
 
             headers: {
@@ -62,7 +62,9 @@ function TweetState({ children }: { children: React.ReactNode }) {
         const data = await res.json()
         console.log("tweet: ", data)
         setCreateTweet(data);
+        setGetTweets([data, ...getTweets])
         console.log("create tweet: ", createTweet)
+        // window.location.reload()
 
     }
 
@@ -70,7 +72,7 @@ function TweetState({ children }: { children: React.ReactNode }) {
     const getUserTweets = async () => {
         const token = localStorage.getItem("token")
         console.log("token: ", token)
-        const res = await fetch(`http://localhost:7000/tweet/user_tweets`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/tweet/user_tweets`, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json',

@@ -24,7 +24,7 @@ export default function SignUp() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const res = await fetch(`http://localhost:7000/api/signup`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

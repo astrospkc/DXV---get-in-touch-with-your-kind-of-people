@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { GroupContext } from '@/context/GroupState';
+import Image from 'next/image';
 
 const GroupSectionCard = () => {
     const { fetchGroups, allGroups, userId_Username } = useContext(GroupContext);
@@ -25,14 +26,20 @@ const GroupSectionCard = () => {
     console.log("all groups", allGroups)
     console.log("name ", userNames)
 
+    const handleClick = () => {
+        console.log("handle clikc")
+    }
+
     return (
         <>
-            {allGroups.map((ele) => (
+            {allGroups && allGroups.map((ele) => (
                 <div
+                    onClick={handleClick}
                     key={ele.group_id}
                     className='flex flex-row text-sm justify-items-center shadow-lg shadow-black rounded-2xl hover:bg-gradient-to-r from-indigo-950 to-red-500 p-2 hover:cursor-pointer my-3'
                 >
-                    <div className='w-fit p-4 bg-black rounded-full border-2'>Avatar</div>
+                    {/* <div className='w-fit p-4 bg-black rounded-full border-2'>Avatar</div> */}
+                    <Image src={ele.group_media_url} width={20} height={20} className="rounded-full" alt={ele.group_name} />
                     <div className='mx-2 hover:text-black'>
                         <h1>{userNames[ele.groupAdminId] || 'Holder Name'}</h1>
                         <h1 className='text-sm'>

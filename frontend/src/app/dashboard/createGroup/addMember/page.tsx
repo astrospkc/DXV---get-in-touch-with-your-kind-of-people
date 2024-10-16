@@ -7,7 +7,7 @@ import UserBadge from '@/UsersList/UserBadge';
 import UserListItem from '@/UsersList/UserListItem';
 
 
-const AddMember = ({ group, selectedUser, setSelectedUser }: any) => {
+const AddMember = ({ group, user, selectedUser, setSelectedUser, selectedUserIds, setSelectedUsedIds }: any) => {
   const [searchResults, setSearchResults] = useState([])
   const [loading, setLoading] = useState(false)
   const group_context = useContext(GroupContext)
@@ -19,13 +19,13 @@ const AddMember = ({ group, selectedUser, setSelectedUser }: any) => {
   // handle search user
   const handleSearch = async (query: string) => {
     const token = localStorage.getItem("token")
-    if (!query) {
-      alert("Please enter a search query")
-    }
+    // if (!query) {
+    //   alert("Please enter a search query")
+    // }
     console.log("query: ", query)
     try {
       setLoading(true)
-      const res = await fetch(`http://localhost:7000/api/?search=${query}`,
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/?search=${query}`,
         {
           method: "GET",
           headers: {
@@ -69,12 +69,19 @@ const AddMember = ({ group, selectedUser, setSelectedUser }: any) => {
         isClosable: true
       })
     }
+
+    // selected user when search query operation is done
     setSelectedUser([...selectedUser, user])
+
+    // selected user ids when search query operation is done
+    setSelectedUsedIds([...selectedUserIds, user.id])
   }
   // console.log("SelectedUser", selectedUser)
 
   const handleDelete = (delUser: any) => {
+
     setSelectedUser(selectedUser.filter((user: any) => user.id !== delUser.id))
+    setSelectedUsedIds(selectedUserIds.filter((id: any) => id !== delUser.id))
   }
 
   // const handleSubmit = (e) => {
@@ -85,11 +92,11 @@ const AddMember = ({ group, selectedUser, setSelectedUser }: any) => {
 
   // }
   return (
-    <div className='flex flex-col justify-center items-center m-auto bg-gray-950 p-4 '>
+    <div className='flex flex-col justify-center items-center m-auto p-4 '>
       Add members to the group
 
       <Input
-        placeholder="search names and add" onChange={(e) => handleSearchChange(e.target.value)}
+        placeholder="search names and add" className='' onChange={(e) => handleSearchChange(e.target.value)}
       />
       <div>
         {

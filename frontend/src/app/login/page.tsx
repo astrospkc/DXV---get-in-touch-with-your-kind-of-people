@@ -28,7 +28,7 @@ export default function Login() {
     let data: any;
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const res = await fetch("http://localhost:7000/api/login", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

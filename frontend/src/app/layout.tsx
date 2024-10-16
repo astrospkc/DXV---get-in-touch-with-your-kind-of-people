@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className}>
 
         <ThemeProvider
@@ -31,17 +31,11 @@ export default function RootLayout({
         >
           <Providers>
             <ChatProvider>
-              <div className="flex h-screen justify-center items-center m-auto">
+              <div className="flex h-screen justify-center items-center m-auto bg-gradient-to-r from-blue-900 to-gray-500 ">
                 {children}
               </div>
-
             </ChatProvider>
-
-
-
           </Providers>
-
-
         </ThemeProvider>
       </body>
 

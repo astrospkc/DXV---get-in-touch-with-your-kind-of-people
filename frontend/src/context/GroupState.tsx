@@ -32,7 +32,7 @@ const GroupState = ({ children }: any) => {
 
       console.log("token", token);
       const res = await fetch(
-        `http://localhost:7000/group/getAllGroupsOfUser`,
+        `${process.env.NEXT_PUBLIC_URL}/group/getAllGroupsOfUser`,
         {
           method: "GET",
           headers: {
@@ -61,7 +61,7 @@ const GroupState = ({ children }: any) => {
 
   // this I need in the find group section
   const fetchGroups = async () => {
-    const res = await fetch(`http://localhost:7000/group/getAllGroups`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/group/getAllGroups`, {
       method: "GET",
       headers: {
         'Content-type': "application/json",
@@ -77,7 +77,7 @@ const GroupState = ({ children }: any) => {
 
   const userId_Username = async (userId: number) => {
     try {
-      const res = await fetch(`http://localhost:7000/group/getSingleUserInfo/${userId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/group/getSingleUserInfo/${userId}`, {
         method: "GET",
         headers: {
           'Content-Type': "application/json",

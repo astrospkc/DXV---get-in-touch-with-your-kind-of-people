@@ -46,7 +46,7 @@ const GroupsLeftBar = () => {
         <div className='m-3 mx-6 flex flex-col justify-around items-center h-full text-gray-400'>
             <div className='flex flex-col w-fit'>
 
-                <Link href="/groupsDashboard/ChatPage" >
+                <Link href="/groupsDashboard/chatPage" >
                     <Badge className='my-3 bg-slate-500 text-white p-2 hover:cursor-pointer hover:scale-125'>
                         Chats
                     </Badge>
@@ -81,20 +81,7 @@ const GroupsLeftBar = () => {
 
 
             </div>
-            {/* <div className='flex flex-col justify-center items-center'>
-                <Link href="/dashboard">
-                    <Button variant="outline" className='my-4'>Dashboard</Button>
-                </Link>
 
-
-                <div className='flex flex-row text-sm justify-items-center border-2 border-gray-600 rounded-full mb-6'>
-                    <div className='w-fit p-4 bg-black rounded-full'>Avatar</div>
-                    <div className='mx-2'>
-                        <h1>Holder Name</h1>
-                        <h1>@GroupName</h1>
-                    </div>
-                </div>
-            </div> */}
         </div>
     );
 }

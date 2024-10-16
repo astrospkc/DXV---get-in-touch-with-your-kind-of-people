@@ -13,7 +13,7 @@ const Dashboard = () => {
   return (
 
 
-    <div className='bg-black ' suppressHydrationWarning={true} >
+    <div className='' suppressHydrationWarning={true} >
       <MainContent />
 
     </div>

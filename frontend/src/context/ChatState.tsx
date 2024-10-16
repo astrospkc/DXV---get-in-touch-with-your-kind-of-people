@@ -2,28 +2,36 @@
 
 import { createContext, useContext, useState } from "react";
 
-import { ChatProviderProps, ChatContextType, chatType, UserType } from "../components/types/types"
+// import { ChatProviderProps, ChatContextType, chatType, UserType } from "../components/types/types"
 
 
-const ChatContext = createContext<ChatContextType | undefined>(undefined)
+const ChatContext = createContext(undefined)
 
-const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
+const ChatProvider = ({ children }) => {
 
 
 
-    const [selectedChat, setSelectedChat] = useState<chatType>({
-        _id: null,
+    const [selectedChat, setSelectedChat] = useState({
+        id: "",
         chatName: "",
         isGroupChat: false,
         users: [],
         latestMessage: null,
-        groupAdmin: null
+        groupAdmin: {
+            id: "",
+            name: "",
+            username: "",
+            email: "",
+            pic: ""
+        }
+
     });
 
     // const [selectedChat, setSelectedChat] = useState<chatType | "">("")
-    const [user, setUser] = useState<UserType | undefined>(undefined);
+    const [user, setUser] = useState(undefined);
+    // const [user_details, setUserDetails] = useState()
     // const [notification, setNotification] = useState<notificationType>({});
-    const [chats, setChats] = useState<chatType[]>([]);
+    const [chats, setChats] = useState([]);
 
 
 
@@ -33,7 +41,7 @@ const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
             alert('first login please, token is not generated')
 
         }
-        const res = await fetch(`http://localhost:7000/api/user_info`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user_info`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -49,6 +57,21 @@ const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     console.log("user: ", user)
 
 
+    // const userInfoWithId = async (id) => {
+    //     console.log("id: ", id)
+    //     const token = localStorage.getItem("token")
+    //     const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/getUserInfoId/${id}`, {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-type': 'application/json',
+    //             Authorization: `Bearer ${token}`
+    //         }
+    //     })
+    //     const data = await res.json()
+    //     setUserDetails(data)
+    // }
+
+
 
 
 
@@ -58,6 +81,7 @@ const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
             setUser,
             selectedChat,
             setSelectedChat,
+
             // notification, setNotification,
             chats, setChats, userInfo
 
@@ -69,9 +93,9 @@ const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
 
 const ChatState = () => {
     const context = useContext(ChatContext)
-    if (context === undefined) {
-        throw new Error("useChat must be used within a chatProvider")
-    }
+    // if (context === undefined) {
+    //     throw new Error("useChat must be used within a chatProvider")
+    // }
     return context
 }
 export { ChatProvider, ChatState } 

@@ -29,7 +29,7 @@ const tools = [
     },
     {
         "id": 4,
-        "element": "...",
+        "element": "more",
         "heading": "more content"
     },
 
@@ -39,12 +39,13 @@ const tools = [
 
 function Tooltips() {
     return (
-        <div className="flex gap-4 justify-evenly">
+        <div className="flex flex-col gap-4 justify-center my-auto ">
             {tools.map((ele) => (
                 <TooltipProvider key={ele.id}>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="outline">{ele.element}</Button>
+                            {/* <Button variant="outline" className='text-sm'>{ele.element}</Button> */}
+                            <div className='cursor-pointer'>{ele.element}</div>
                         </TooltipTrigger>
                         <TooltipContent>
                             <p>{ele.heading}</p>
@@ -66,11 +67,12 @@ interface Item {
 }
 
 import { LoaderContext } from "@/context/LoaderState"
+import Image from 'next/image';
 
 const TweetCard = () => {
-    const [data, setData] = useState<Item[]>([])
+
     const tweet_context = useContext(TweetContext)
-    const { getTweets, setGetTweets, getAllTweets } = tweet_context
+    const { getTweets, getAllTweets } = tweet_context
     const { isLoading, setIsLoading } = useContext(LoaderContext)
     console.log("get tweets: ", getTweets)
     // handling api calls: 
@@ -87,8 +89,18 @@ const TweetCard = () => {
             isLoading ? <div>...isLoading</div> :
                 <>
                     {getTweets && getTweets.map((ele) => {
+
+                        const tweet_Date = new Date(ele.updatedAt);
+                        console.log("url: ", ele.userInfo[0].media_url)
+                        const formattedDate = tweet_Date.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                        });
+                        const formattedTime = tweet_Date.toLocaleTimeString("en-US")
+
                         return (
-                            <div className='m-4  p-3  flex flex-row bg-black rounded-2xl ' key={ele.id}>
+                            <div className='m-4  p-3  flex flex-row bg-blue-300 rounded-2xl shadow-lg shadow-blue-950 ' key={ele.id}>
 
                                 {/* 1. Avatar
                 2. the smaller main content
@@ -99,26 +111,44 @@ const TweetCard = () => {
             */}
 
                                 <div className=''>
-                                    <h1 className='w-fit p-2 bg-black text-white rounded-full'>Avatar</h1>
+                                    {/* <h1 className='w-fit p-2 bg-black text-white rounded-full'>{ele.media_url}</h1> */}
+
                                 </div>
-                                <div className='w-full'>
-                                    <div className='flex flex-row border-b-2 border-b-black text-sm m-2 p-3 gap-4'>
-                                        <div className='flex flex-col'><h1>Holder name</h1>
-                                            <h1>@Username</h1></div>
-                                        <div className='flex flex-row gap-4'>
-                                            <h1>--group name</h1>
-                                            <h1>date</h1>
+                                <div className='w-full '>
+                                    <div className="flex flex-row justify-around w-full">
+                                        <div className='flex flex-col border-r-2 border-b-black text-sm m-2 p-3 gap-4 w-4/5'>
+                                            <div className="flex  flex-col">
+                                                <div className='flex flex-row items-center gap-4'>
+                                                    <Image src={ele.userInfo[0].media_url} width={50} height={50} alt='avatar' className='rounded-full' />
+
+                                                    <div className='flex flex-col gap-2'>
+                                                        <h1>{ele.userInfo[0].username}</h1>
+                                                        <div className='flex flex-row'>
+                                                            <h1>{formattedTime}</h1>
+                                                            <h1>{formattedDate}</h1>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div className='bg-gray-500 m-2 p-4 rounded-3xl'>{ele.content}</div>
+
                                         </div>
 
+                                        <div className='w-1/5 flex items-center'>
+
+                                            <Tooltips />
+
+
+                                        </div>
                                     </div>
-                                    <div className='bg-black m-2 p-4 rounded-3xl'>{ele.content}</div>
-
-                                    <div>
-
-                                        <Tooltips />
 
 
-                                    </div>
+
                                 </div>
 
 

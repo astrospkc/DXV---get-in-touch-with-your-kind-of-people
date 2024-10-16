@@ -8,6 +8,7 @@ export const message = pgTable("messages_table", {
     sender_id: integer("sender_id").references(() => usersTable.id).notNull(),
     sender: jsonb("sender"), //sender of the message
     content: text("content"), // Content of the message
+    chatId: integer("chat_id").references(() => chat.id).notNull(),
     chat: jsonb("chat"), //chat info 
     createdAt: timestamp("created_at").defaultNow().notNull(), // Created timestamp
 });

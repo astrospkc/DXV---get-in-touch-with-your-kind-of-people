@@ -13,7 +13,7 @@ import cors from 'cors';
 
 const allowedOrigins = "http://localhost:3000"
 
-const PORT = 7000
+const PORT = 8000
 const app = express();
 
 app.use(

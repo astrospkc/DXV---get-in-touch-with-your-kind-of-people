@@ -1,10 +1,10 @@
 import express from 'express'
-import { createGroup, get_all_groups, get_groups, getGroupDetail } from '../db/queries/groupQueries'
+import { createGroup, get_all_groups, get_groups, getGroupDetail, getGroupDetailsWithName } from '../db/queries/groupQueries'
 import { db } from '../db/db';
 import { usersTable } from '../db/schema/index';
 import { eq } from 'drizzle-orm';
 import fetchuser from '../../middleware/fetchuser';
-import { getUserInfoWithId } from '../db/queries/userQueries';
+import { getUserInfoWithId, usersDetails } from '../db/queries/userQueries';
 const router = express.Router()
 
 
@@ -19,7 +19,7 @@ async function createGroups(req: express.Request, res: express.Response) {
         return res.status(400).json({ error: "All fields are required" })
     }
 
-    let admin_id = parseInt(req.user?.id ?? '0');
+    let admin_id = parseInt(req.user?.id ?? '');
 
 
     // check if user exists or not
@@ -28,6 +28,9 @@ async function createGroups(req: express.Request, res: express.Response) {
     if (userExist.length === 0) {
         return res.status(404).json({ error: "User not found" });
     }
+    users.push(admin_id)
+
+    const users_details = await usersDetails(users)
 
     const group = await createGroup(
         {
@@ -37,7 +40,8 @@ async function createGroups(req: express.Request, res: express.Response) {
             github_url: github_url,
             groupAdminId: admin_id,
             project_desc: req.body.project_desc,
-            users: users
+            users: users,
+            usersInfo: users_details
         }
     );
     console.log("group:", group)
@@ -115,11 +119,24 @@ async function getUserIdInfo(req: express.Request, res: express.Response) {
         console.error(error)
     }
 }
+
+// async function getGroupInfoWithGroupName(req: express.Request, res: express.Response) {
+//     const { groupName } = req.body
+//     try {
+//         const data = await getGroupDetailsWithName(groupName)
+//         res.status(200).json(data)
+//     } catch (error) {
+//         console.log(error)
+//     }
+
+
+// }
 router.get('/groups/:groupid', fetchuser, getGroupInfo);
 router.post("/createGroup", fetchuser, createGroups);
 router.get("/getAllGroupsOfUser", fetchuser, getAllGroupsOfUser);
 router.get('/getAllGroups', getAllGroups)
 router.get("/getSingleUserInfo/:userId", getUserIdInfo)
 router.get("/getGroupInfo/:groupid", fetchuser, getGroupInfo)
+// router.get("/getGroupInfoWithName", fetchuser, getGroupInfoWithGroupName)
 
 export default router

@@ -11,7 +11,7 @@ export const chat = pgTable("chat_table", {
     // users: text("users").notNull(),
     users: integer("users").references(() => usersTable.id).array(),
     usersInfo: jsonb("users_info").array(),
-    latestMessage: integer("latestMessage").references(() => message.id),
+    latestMessage: integer("latestMessage"),
     groupAdmin: jsonb("group_admin"),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
 

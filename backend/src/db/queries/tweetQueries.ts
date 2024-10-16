@@ -4,12 +4,12 @@ import { eq, desc } from 'drizzle-orm';
 
 export async function createTweet(data: InsertTweet) {
     console.log("data: ", data)
-    await db.insert(tweetTable).values(data)
+    await db.insert(tweetTable).values(data).returning()
 
     return data;
 }
 
-export async function getAllTweetSingleUser(userId: Number) {
+export async function getAllTweetSingleUser(userId: number) {
     console.log("userId: ", userId)
     return await db.select().from(tweetTable).where(eq(tweetTable.userId, userId)).execute();
 }

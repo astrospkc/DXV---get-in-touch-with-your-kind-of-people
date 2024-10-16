@@ -3,8 +3,9 @@ CREATE TABLE IF NOT EXISTS "chat_table" (
 	"chatName" text NOT NULL,
 	"isGroupChat" boolean DEFAULT false NOT NULL,
 	"users" integer[],
+	"users_info" jsonb[],
 	"latestMessage" integer,
-	"groupAdmin" integer NOT NULL,
+	"group_admin" jsonb,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "chat_table_chatName_unique" UNIQUE("chatName")
 );
@@ -30,10 +31,11 @@ CREATE TABLE IF NOT EXISTS "group_table" (
 	"group_name" text NOT NULL,
 	"group_adminId" integer NOT NULL,
 	"total_members" integer NOT NULL,
-	"media_url" text,
+	"media_url" text DEFAULT 'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg',
 	"github_url" text NOT NULL,
 	"project_desc" text,
-	"users" jsonb[],
+	"users" integer[],
+	"users_info" jsonb[],
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp NOT NULL,
 	CONSTRAINT "group_table_group_name_unique" UNIQUE("group_name"),
@@ -49,9 +51,11 @@ CREATE TABLE IF NOT EXISTS "likes_table" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "messages_table" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"sender" integer,
+	"sender_id" integer NOT NULL,
+	"sender" jsonb,
 	"content" text,
-	"chat_id" integer,
+	"chat_id" integer NOT NULL,
+	"chat" jsonb,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
@@ -81,6 +85,7 @@ CREATE TABLE IF NOT EXISTS "tweet_table" (
 	"media_url" text,
 	"content" text NOT NULL,
 	"user_id" integer NOT NULL,
+	"user_info" jsonb,
 	"likes" integer,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp NOT NULL
@@ -91,23 +96,11 @@ CREATE TABLE IF NOT EXISTS "users_table" (
 	"name" text NOT NULL,
 	"username" text NOT NULL,
 	"email" text NOT NULL,
-	"media_url" text,
+	"media_url" text DEFAULT 'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg',
 	"password" text NOT NULL,
 	CONSTRAINT "users_table_username_unique" UNIQUE("username"),
 	CONSTRAINT "users_table_email_unique" UNIQUE("email")
 );
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "chat_table" ADD CONSTRAINT "chat_table_latestMessage_messages_table_id_fk" FOREIGN KEY ("latestMessage") REFERENCES "public"."messages_table"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "chat_table" ADD CONSTRAINT "chat_table_groupAdmin_users_table_id_fk" FOREIGN KEY ("groupAdmin") REFERENCES "public"."users_table"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "comments_table" ADD CONSTRAINT "comments_table_tweet_id_tweet_table_id_fk" FOREIGN KEY ("tweet_id") REFERENCES "public"."tweet_table"("id") ON DELETE no action ON UPDATE no action;
@@ -152,7 +145,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "messages_table" ADD CONSTRAINT "messages_table_sender_users_table_id_fk" FOREIGN KEY ("sender") REFERENCES "public"."users_table"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "messages_table" ADD CONSTRAINT "messages_table_sender_id_users_table_id_fk" FOREIGN KEY ("sender_id") REFERENCES "public"."users_table"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "messages_table" ADD CONSTRAINT "messages_table_chat_id_chat_table_id_fk" FOREIGN KEY ("chat_id") REFERENCES "public"."chat_table"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

@@ -15,9 +15,9 @@ export async function allMessages() {
     const data = await db.select().from(message).execute()
     return data
 }
-export const fetchAllMessagesById = async (id: Number) => {
+export const fetchAllMessagesById = async (id: number) => {
     try {
-        const allMessages = await db.select().from(message).orderBy(desc(message.createdAt)).where(eq(message.chat, id)).execute()
+        const allMessages = await db.select().from(message).orderBy(desc(message.createdAt)).where(eq(message.chatId, id)).execute()
         return allMessages
     } catch (error) {
         throw new Error("messages not fetched")

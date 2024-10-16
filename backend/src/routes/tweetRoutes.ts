@@ -4,6 +4,7 @@ import { db } from '../db/db';
 import { tweetTable, usersTable } from '../db/schema/index';
 import { eq } from 'drizzle-orm';
 import fetchuser from '../../middleware/fetchuser';
+import { getUserInfoWithId } from '../db/queries/userQueries';
 const router = express.Router()
 
 // create tweet
@@ -24,20 +25,16 @@ async function createTweets(req: express.Request, res: express.Response) {
         return res.status(404).json({ error: "User not found" });
     }
 
-    const tweetExists = await db
-        .select()
-        .from(tweetTable)
-        .where(eq(tweetTable.userId, userId))
-        .limit(1)
-        .execute();
-
-    console.log("tweet exist: ", tweetExists)
-
+    const user_data = await getUserInfoWithId(userId)
 
     const tweets = await createTweet(
         {
             content: content,
-            userId: userId
+            userId: userId,
+            userInfo: user_data,
+            createdAt: new Date(),
+            updatedAt: new Date()
+
         }
     );
     console.log("tweet:", tweets)

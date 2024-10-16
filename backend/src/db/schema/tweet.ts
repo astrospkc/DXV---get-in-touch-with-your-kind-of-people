@@ -1,4 +1,4 @@
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 import { usersTable } from "./users";
 export const tweetTable = pgTable('tweet_table', {
@@ -8,7 +8,7 @@ export const tweetTable = pgTable('tweet_table', {
     userId: integer('user_id')
         .notNull()
         .references(() => usersTable.id, { onDelete: 'cascade' }),
-
+    userInfo: jsonb('user_info'),
     num_likes: integer('likes'),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at')

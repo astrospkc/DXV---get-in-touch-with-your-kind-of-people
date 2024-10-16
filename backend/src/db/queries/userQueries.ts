@@ -7,9 +7,9 @@ import { eq } from 'drizzle-orm';
 
 
 export async function createUser(data: InsertUsers) {
-    await db.insert(usersTable).values(data);
-    console.log("data: ", data)
-    return data
+    const user = await db.insert(usersTable).values(data).returning();
+
+    return user
 }
 
 export async function getUserInfoWithId(userId: number) {
@@ -32,6 +32,7 @@ export async function getUserInfoWithId(userId: number) {
 }
 
 export async function usersDetails(users_arr: number[]) {
+    if (users_arr.length == 0) return
     let arr = []
     for (let i = 0; i < users_arr.length; i++) {
         let data = await getUserInfoWithId(users_arr[i])

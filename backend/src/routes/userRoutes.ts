@@ -40,7 +40,7 @@ async function createUserInfo(req: express.Request, res: express.Response) {
         }
 
         const salt = await bcrypt.genSalt(10)
-        const secPass = await bcrypt.hashSync(password, salt)
+        const secPass = bcrypt.hashSync(password, salt)
 
         const user = await createUser(
             {
@@ -57,7 +57,7 @@ async function createUserInfo(req: express.Request, res: express.Response) {
 
         const data = {
             user: {
-                id: user.id
+                id: user[0].id
             }
         }
 
@@ -125,7 +125,7 @@ async function getUser(req: express.Request, res: express.Response) {
         const userId = parseInt(req.user?.id ?? '')
 
         console.log("id: ", userId)
-        const user = await getUserInfo(userId);
+        const user = await getUserInfoWithId(userId);
         console.log("user", user);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });

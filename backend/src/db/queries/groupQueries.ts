@@ -26,3 +26,8 @@ export async function get_all_groups() {
     return await db.select().from(groupTable).orderBy(desc(groupTable.createdAt)).execute()
 }
 
+// export async function getGroupDetailsWithName(groupName: string) {
+//     const data = await db.select().from(groupTable).where(eq(groupTable.group_name, groupName)).limit(1).execute()
+//     return data
+// }
+

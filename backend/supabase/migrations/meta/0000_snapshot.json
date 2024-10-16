@@ -1,5 +1,5 @@
 {
-  "id": "11004e21-2a7d-4cc7-86c3-5a4aadb568a6",
+  "id": "1f89e4d7-9d07-4a63-8982-09e93795d583",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -33,17 +33,23 @@
           "primaryKey": false,
           "notNull": false
         },
+        "users_info": {
+          "name": "users_info",
+          "type": "jsonb[]",
+          "primaryKey": false,
+          "notNull": false
+        },
         "latestMessage": {
           "name": "latestMessage",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
-        "groupAdmin": {
-          "name": "groupAdmin",
-          "type": "integer",
+        "group_admin": {
+          "name": "group_admin",
+          "type": "jsonb",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
@@ -54,34 +60,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "chat_table_latestMessage_messages_table_id_fk": {
-          "name": "chat_table_latestMessage_messages_table_id_fk",
-          "tableFrom": "chat_table",
-          "tableTo": "messages_table",
-          "columnsFrom": [
-            "latestMessage"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "chat_table_groupAdmin_users_table_id_fk": {
-          "name": "chat_table_groupAdmin_users_table_id_fk",
-          "tableFrom": "chat_table",
-          "tableTo": "users_table",
-          "columnsFrom": [
-            "groupAdmin"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "chat_table_chatName_unique": {
@@ -261,7 +240,8 @@
           "name": "media_url",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg'"
         },
         "github_url": {
           "name": "github_url",
@@ -277,6 +257,12 @@
         },
         "users": {
           "name": "users",
+          "type": "integer[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "users_info": {
+          "name": "users_info",
           "type": "jsonb[]",
           "primaryKey": false,
           "notNull": false
@@ -401,9 +387,15 @@
           "primaryKey": true,
           "notNull": true
         },
+        "sender_id": {
+          "name": "sender_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "sender": {
           "name": "sender",
-          "type": "integer",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
@@ -417,6 +409,12 @@
           "name": "chat_id",
           "type": "integer",
           "primaryKey": false,
+          "notNull": true
+        },
+        "chat": {
+          "name": "chat",
+          "type": "jsonb",
+          "primaryKey": false,
           "notNull": false
         },
         "created_at": {
@@ -429,12 +427,25 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "messages_table_sender_users_table_id_fk": {
-          "name": "messages_table_sender_users_table_id_fk",
+        "messages_table_sender_id_users_table_id_fk": {
+          "name": "messages_table_sender_id_users_table_id_fk",
           "tableFrom": "messages_table",
           "tableTo": "users_table",
           "columnsFrom": [
-            "sender"
+            "sender_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "messages_table_chat_id_chat_table_id_fk": {
+          "name": "messages_table_chat_id_chat_table_id_fk",
+          "tableFrom": "messages_table",
+          "tableTo": "chat_table",
+          "columnsFrom": [
+            "chat_id"
           ],
           "columnsTo": [
             "id"
@@ -628,6 +639,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "user_info": {
+          "name": "user_info",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "likes": {
           "name": "likes",
           "type": "integer",
@@ -699,7 +716,8 @@
           "name": "media_url",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg'"
         },
         "password": {
           "name": "password",

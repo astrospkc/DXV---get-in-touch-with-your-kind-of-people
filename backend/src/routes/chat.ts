@@ -1,10 +1,11 @@
+import { message } from './../db/schema/message';
 import { chat, usersTable, message } from './../db/schema/index';
 import { and, arrayContains } from 'drizzle-orm';
 import express from 'express'
 import { db } from '../db/db'
 import fetchuser from '../../middleware/fetchuser';
 import { eq } from 'drizzle-orm';
-import { fetchChat, fetchChatDetails } from '../db/queries/chatQueries';
+import { checkChat, createChat, fetchChat, fetchChatDetails, fetchChatDetailsByName } from '../db/queries/chatQueries';
 import { getUserInfoWithId, usersDetails } from '../db/queries/userQueries';
 import { fetchAllMessagesById } from '../db/queries/messageQueries';
 import { group } from 'console';
@@ -28,47 +29,24 @@ async function AccessChat(req: express.Request, res: express.Response, next: exp
 
         // this is the trial section - >
         // 1. checking if the chat already exists
-        const isChat = await db.query.chat.findMany({
-            where: (users) => {
-                return and(eq(users.isGroupChat, false),
-                    arrayContains(users.users, [u_id, userId]))
-            },
-        })
+        const isChat = await checkChat(u_id, userId)
         console.log("is chat: ", isChat)
 
         // if exist then return the chat and user details 
         if (isChat?.length > 0) {
-            let userDetails: any[] = []
+            // let userDetails: any[] = []
             console.log(isChat[0].users)
             const userIds = isChat[0].users
 
-            // fetching the user details
-            // getUserDetailsByIds function 
-            if (userIds) {
-                try {
-                    // fetch user details for the provided user ids
-
-                    for (let i = 0; i < userIds.length; i++) {
-                        const user = await getUserInfoWithId(userIds[i]);
-                        userDetails.push(user);
-                    }
-                    console.log("user Details :", userDetails)
-
-                } catch (error) {
-                    console.error("Error fetching user details: ", error)
-                    throw error
-                }
-            }
-
-
-
+            const userDetails = await usersDetails(userIds ? userIds : []);
             let data = {
                 id: isChat[0].id,
                 chatName: isChat[0].chatName,
                 isGroupChat: isChat[0].isGroupChat,
-                users: userDetails,
+                users: userIds,
+                usersInfo: userDetails,
                 latestMessage: isChat[0].latestMessage,
-                groupAdmin: userDetails[0],
+                groupAdmin: userDetails ? userDetails[0] : null,
                 createdAt: isChat[0].createdAt
             }
 
@@ -78,51 +56,29 @@ async function AccessChat(req: express.Request, res: express.Response, next: exp
         // If chat does not exist, create a new chat
         if (isChat?.length === 0 && u_id !== undefined) {
             // Logic to create a new chat
-            const users = [u_id, userId]
+            let users = [u_id];
+            if (u_id != userId) {
+                users.push(userId)
+            }
+
             const chatName = await db.select({ username: usersTable.username }).from(usersTable).where(eq(usersTable.id, userId))
             console.log("chatname: ", chatName)
 
             // fetching the user details with users which contains userIds
-            let userDetails = []
-            for (let i = 0; i < users.length; i++) {
-                const user = await getUserInfoWithId(users[i])
-                userDetails.push(user)
-            }
+            let userDetails = await usersDetails(users)
             console.log("user details of the new chat: ", userDetails)
 
             const admin = await getUserInfoWithId(u_id)
-            const newChat = await db.insert(chat).values(
-                {
-                    chatName: chatName[0].username,
-                    isGroupChat: false,
-                    groupAdmin: admin, // 
-                    users: users,
-                    usersInfo: usersDetails
+            const newChat = await createChat({ chatName, admin, users, userDetails })
 
-                }).returning();
             console.log("new chat: ", newChat)
 
-
-
-
-            let data = {
-                id: newChat[0].id,
-                chatName: newChat[0].chatName,
-                isGroupChat: newChat[0].isGroupChat,
-                users: userDetails,
-                latestMessage: newChat[0].latestMessage,
-                groupAdmin: userDetails[0],
-                createdAt: newChat[0].createdAt
-
-            }
-            return res.status(201).json({ chat: data });
+            return res.status(200).json({ chat: newChat });
 
             // return res.status(201).json({ chat: newChat, users: userDetails });
         } else {
             return res.status(404).json({ message: "groupAdmin  undefined" });
         }
-
-
 
     } catch (error: any) {
         res.status(500).json({ message: "Error creating chat", error: error.message });
@@ -167,7 +123,7 @@ async function FetchChats(req: express.Request, res: express.Response) {
 // users, groupAdmin, latestMessage, senders-> name , email and pic
 // route: /fetchUsersChats
 async function fetchUsersChats(req: express.Request, res: express.Response) {
-    const userId = req.user?.id
+    const userId = parseInt(req.user?.id ?? '')
     try {
         const chats = await fetchChat(userId)
         const chatId = chats[0].latestMessage
@@ -216,14 +172,16 @@ const CreateGroupChat = async (req: express.Request, res: express.Response) => {
         users.push(parseInt(req.user?.id ?? ''))
 
         console.log("req.body.chatName: ", req.body.chatName)
+        const users_info = await usersDetails(users)
 
         try {
             //creating group chat with chatName, users,isGroupChat - true, groupAdmin- req.user
             const groupChat = await db.insert(chat).values({
                 chatName: req.body.chatName,
                 users: users,
+                usersInfo: users_info,
                 isGroupChat: true,
-                groupAdmin: parseInt(req.user?.id ?? '')
+                groupAdmin: users_info ? users_info[users_info.length - 1] : req.user?.id
             }).returning();
             console.log("groupchat: ", groupChat)
             res.status(200).json({ chat: groupChat })
@@ -265,11 +223,25 @@ const FetchChatDetails = async (req: express.Request, res: express.Response) => 
     }
 }
 
+const FetchChatDetailsWithName = async (req: express.Request, res: express.Response) => {
+    const { name } = req.params
+    try {
+        const data = await fetchChatDetailsByName(name)
+        // console.log("chat  data: ", data)
+        res.status(200).json(data)
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+
+
 router.get("/chatDetails/:id", fetchuser, FetchChatDetails)
 router.post("/createChat", fetchuser, AccessChat)
 router.get("/fetchChats", fetchuser, FetchChats)
 router.get("/fetchUsersChats", fetchuser, fetchUsersChats)
 router.post("/createGroupChat", fetchuser, CreateGroupChat)
 router.put("/renameGroup", fetchuser, RenameGroup)
+router.get("/fetchChatDetails/:name", fetchuser, FetchChatDetailsWithName)
 
 export default router

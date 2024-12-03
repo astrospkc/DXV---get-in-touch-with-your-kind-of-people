@@ -5,7 +5,7 @@ import { usersTable } from "./index";
 
 export const groupTable = pgTable('group_table', {
     group_id: serial('group_id').primaryKey().notNull(),
-    group_name: text('group_name').notNull().unique(),
+    group_name: text('group_name').unique(),
     groupAdminId: integer('group_adminId')
         .notNull().references(() => usersTable.id, { onDelete: 'cascade' }),
     total_members: integer('total_members').notNull(),

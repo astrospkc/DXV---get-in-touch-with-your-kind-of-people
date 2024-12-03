@@ -19,6 +19,13 @@ CREATE TABLE IF NOT EXISTS "comments_table" (
 	"updated_at" timestamp NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "connections" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"follower_id" integer,
+	"following_id" integer,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "group_member_table" (
 	"member_id" integer PRIMARY KEY NOT NULL,
 	"group_id" integer NOT NULL,
@@ -28,7 +35,7 @@ CREATE TABLE IF NOT EXISTS "group_member_table" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "group_table" (
 	"group_id" serial PRIMARY KEY NOT NULL,
-	"group_name" text NOT NULL,
+	"group_name" text,
 	"group_adminId" integer NOT NULL,
 	"total_members" integer NOT NULL,
 	"media_url" text DEFAULT 'https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg',
@@ -110,6 +117,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "comments_table" ADD CONSTRAINT "comments_table_user_id_users_table_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users_table"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "connections" ADD CONSTRAINT "connections_follower_id_users_table_id_fk" FOREIGN KEY ("follower_id") REFERENCES "public"."users_table"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "connections" ADD CONSTRAINT "connections_following_id_users_table_id_fk" FOREIGN KEY ("following_id") REFERENCES "public"."users_table"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

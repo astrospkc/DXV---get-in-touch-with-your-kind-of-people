@@ -1,10 +1,12 @@
 import express from 'express'
-import { createGroup, get_all_groups, get_groups, getGroupDetail, getGroupDetailsWithName } from '../db/queries/groupQueries'
+import { createGroup, get_all_groups, get_all_groups_of_userAdmin, get_groups, getGroupDetail, getGroupDetailsWithName } from '../db/queries/groupQueries'
 import { db } from '../db/db';
 import { usersTable } from '../db/schema/index';
 import { eq } from 'drizzle-orm';
 import fetchuser from '../../middleware/fetchuser';
 import { getUserInfoWithId, usersDetails } from '../db/queries/userQueries';
+import uploadOnCLoudinary from '../utils/cloudinary';
+import { upload } from '../middleware/multer.middleware';
 const router = express.Router()
 
 
@@ -12,10 +14,11 @@ const router = express.Router()
 async function createGroups(req: express.Request, res: express.Response) {
     // console.log(req.user?.groupAdminId)
     console.log(req.body)
-    const { group_name, total_members, group_media_url, github_url, users } = req.body;
+    const { group_name, total_members, github_url, users } = req.body;
+    console.log(group_name, total_members, github_url)
     console.log("admin id: ", req.user?.id)
 
-    if (!group_name || !total_members || !github_url || !users) {
+    if (!group_name || !total_members || !github_url) {
         return res.status(400).json({ error: "All fields are required" })
     }
 
@@ -28,20 +31,28 @@ async function createGroups(req: express.Request, res: express.Response) {
     if (userExist.length === 0) {
         return res.status(404).json({ error: "User not found" });
     }
-    users.push(admin_id)
+    // users.push(admin_id)
 
-    const users_details = await usersDetails(users)
+    // const users_details = await usersDetails(users)
+
+    // upload setup
+    let imagefilePath;
+    if (req.files && 'group_media_url' in req.files) {
+        imagefilePath = req.files.group_media_url[0]?.path
+    }
+    const image = await uploadOnCLoudinary(imagefilePath)
 
     const group = await createGroup(
         {
             group_name: group_name,
             total_members: total_members,
-            group_media_url: group_media_url,
+            group_media_url: image?.url,
+            // group_media_url: image?.url ? image?.url : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
             github_url: github_url,
             groupAdminId: admin_id,
             project_desc: req.body.project_desc,
-            users: users,
-            usersInfo: users_details
+            // users: users,
+            // usersInfo: users_details
         }
     );
     console.log("group:", group)
@@ -65,6 +76,8 @@ async function getAllGroups(req: express.Request, res: express.Response) {
         res.status(500).json({ error: 'Error retrieving groups information' });
     }
 }
+
+
 
 // getting the group information
 
@@ -92,7 +105,7 @@ async function getAllGroupsOfUser(req: express.Request, res: express.Response) {
         // 2. get the groups which will contain the group_id , and from that group_id we can get the group member details along with the group_name and all the group details
         const user_id = parseInt(req.user?.id ?? '');
         console.log("user id: ", user_id)
-        const groups = await get_groups(user_id)
+        const groups = await get_all_groups_of_userAdmin(user_id)
         console.log("groups: ", groups)
         console.log("groups length: ", groups.length)
 
@@ -132,6 +145,7 @@ async function getUserIdInfo(req: express.Request, res: express.Response) {
 
 // }
 router.get('/groups/:groupid', fetchuser, getGroupInfo);
+router.route("/createGroup").post(upload.fields([{ name: "group_media_url", maxCount: 1 }]), fetchuser, createGroups)
 router.post("/createGroup", fetchuser, createGroups);
 router.get("/getAllGroupsOfUser", fetchuser, getAllGroupsOfUser);
 router.get('/getAllGroups', getAllGroups)

@@ -2,6 +2,7 @@ import { groupMemberTable } from './../schema';
 import { db } from '../db';
 import { groupTable, InsertGroup, InsertPost, InsertTweet, InsertUsers, postsTable, tweetTable, usersTable } from '../schema';
 import { eq, desc } from 'drizzle-orm';
+import { syncBuiltinESMExports } from 'module';
 
 
 export async function createGroup(data: InsertGroup) {
@@ -24,6 +25,10 @@ export async function get_groups(userId: number) {
 
 export async function get_all_groups() {
     return await db.select().from(groupTable).orderBy(desc(groupTable.createdAt)).execute()
+}
+
+export async function get_all_groups_of_userAdmin(id: number) {
+    return await db.select().from(groupTable).where(eq(groupTable.groupAdminId, id)).orderBy(desc(groupTable.createdAt)).execute()
 }
 
 // export async function getGroupDetailsWithName(groupName: string) {

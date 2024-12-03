@@ -7,6 +7,8 @@ import jwt from 'jsonwebtoken'
 import fetchuser from '../../middleware/fetchuser';
 import { and, eq, like, not, or } from 'drizzle-orm';
 import { emitWarning } from 'process';
+import { upload } from '../middleware/multer.middleware';
+import uploadOnCLoudinary from '../utils/cloudinary';
 const router = express.Router()
 
 declare global {
@@ -34,6 +36,18 @@ async function createUserInfo(req: express.Request, res: express.Response) {
         let success = false
         console.log(req.body)
         const { name, username, email, password } = req.body;
+        let imageFilePath;
+        if (req.files && 'media_url' in req.files) {
+            imageFilePath = req.files?.media_url[0]?.path
+        }
+        console.log("req.files: ", req.files)
+
+        // if (!imageFilePath) {
+        //     return res.status(400).json({ error: "Please upload an image" })
+        // }
+
+        const image = await uploadOnCLoudinary(imageFilePath)
+        console.log("image: ", image?.url)
 
         if (!name || !username || !email || !password) {
             return res.status(400).json({ error: "All fields are required" })
@@ -48,7 +62,8 @@ async function createUserInfo(req: express.Request, res: express.Response) {
                 name: name,
                 username: username,
                 email: email,
-                password: secPass
+                password: secPass,
+                media_url: image?.url
             }
 
 
@@ -198,7 +213,8 @@ router.get("/test", test)
 router.post('/login', loginUser)
 router.get('/users', getAllUsers)
 router.get('/user_info', fetchuser, getUser);
-router.post("/signup", createUserInfo);
+router.route("/signup").post(upload.fields([{ name: "media_url", maxCount: 1 }]), createUserInfo)
+
 router.get("/", fetchuser, searchUser)
 router.get("/getUserInfoId/:id", fetchuser, getUserInfoId)
 

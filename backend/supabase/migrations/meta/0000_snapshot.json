@@ -1,5 +1,5 @@
 {
-  "id": "1f89e4d7-9d07-4a63-8982-09e93795d583",
+  "id": "b4f79491-4670-43be-8d84-db800ba14877",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -146,6 +146,68 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "public.connections": {
+      "name": "connections",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "follower_id": {
+          "name": "follower_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "following_id": {
+          "name": "following_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "connections_follower_id_users_table_id_fk": {
+          "name": "connections_follower_id_users_table_id_fk",
+          "tableFrom": "connections",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "follower_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "connections_following_id_users_table_id_fk": {
+          "name": "connections_following_id_users_table_id_fk",
+          "tableFrom": "connections",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "following_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.group_member_table": {
       "name": "group_member_table",
       "schema": "",
@@ -222,7 +284,7 @@
           "name": "group_name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "group_adminId": {
           "name": "group_adminId",

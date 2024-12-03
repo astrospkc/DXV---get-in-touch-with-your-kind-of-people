@@ -25,7 +25,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   // };
 
   const fetchMessages = async () => {
-    if (!selectedChat || !selectedChat[0].id) return;
+    if (!selectedChat || !selectedChat[0]?.id) return;
 
     try {
       setLoading(true);

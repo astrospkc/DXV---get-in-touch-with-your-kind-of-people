@@ -32,6 +32,7 @@ export default function RootLayout({
           <Providers>
             <ChatProvider>
               <div className="flex h-screen justify-center items-center m-auto bg-gradient-to-r from-blue-900 to-gray-500 ">
+
                 {children}
               </div>
             </ChatProvider>

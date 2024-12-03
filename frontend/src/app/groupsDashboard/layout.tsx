@@ -41,7 +41,7 @@ export default function GroupDashboardLayout({ children }: GroupDashboardLayoutP
                 {
                     !isAuthenticated ?
 
-                        <div className="w-3/5  flex flex-col h-full overflow-y-scroll border-r-2 bg-violet-400 justify-center items-center m-auto text-xl text-center ">Its a groups dashboardAuthenticate yourself first by login or signup , we would be happy to share the interesting ideas.
+                        <div className="w-3/5  flex flex-col h-full overflow-y-scroll b justify-center items-center m-auto text-xl text-center ">Its a groups dashboardAuthenticate yourself first by login or signup , we would be happy to share the interesting ideas.
                             <Link href="/"><Button>Go Back</Button></Link>
                         </div>
                         :

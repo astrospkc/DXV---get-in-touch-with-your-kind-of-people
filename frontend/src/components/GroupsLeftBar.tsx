@@ -69,7 +69,7 @@ const GroupsLeftBar = () => {
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                             <CreditCard className="mr-2 h-4 w-4" />
-                            <span className='hover:cursor-pointer'>Open Whiteboard</span>
+                            <span className='hover:cursor-pointer'><Link href="/groupsDashboard/sketchBoard">Open Whiteboard</Link></span>
 
                         </DropdownMenuItem>
                     </DropdownMenuContent>

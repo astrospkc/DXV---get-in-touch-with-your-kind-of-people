@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 import { useRouter } from "next/navigation";
+import axios from "axios";
 // import {
 //     IconBrandGithub,
 //     IconBrandGoogle,
@@ -22,28 +23,36 @@ export default function SignUp() {
         password: "",
     })
 
+    const [file, setFile] = useState(null)
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/signup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                name: credentials.name,
-                username: credentials.username,
-                email: credentials.email,
-                password: credentials.password
-            })
-        })
-        const data = await res.json()
-        console.log("data in signup: ", data)
-        console.log("success: ", data.success)
-        if (data.success) {
-            // storing token in localstorage
-            console.log("data authtoken: ", data.authtoken)
+        const formData = new FormData()
+        formData.append("name", credentials.name)
+        formData.append("username", credentials.username)
+        formData.append("email", credentials.email)
+        formData.append("password", credentials.password)
+        if (file) {
+            formData.append("media_url", file)
 
-            localStorage.setItem("token", data.authtoken)
+        }
+
+
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/signup`, formData, {
+
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+
+        })
+
+
+        console.log("success: ", res.data)
+        if (res.data.success) {
+            // storing token in localstorage
+            console.log("data authtoken: ", res.data.authtoken)
+
+            localStorage.setItem("token", res.data.authtoken)
             alert("happy signed in")
             router.push("/dashboard")
 
@@ -74,22 +83,26 @@ export default function SignUp() {
             <form className="my-8" onSubmit={handleSubmit}>
                 <LabelInputContainer>
                     <Label htmlFor="name">Name</Label>
-                    <Input id="name" placeholder="Durden" type="text" onChange={handleChange} />
+                    <Input className="text-white" id="name" placeholder="Durden" type="text" onChange={handleChange} />
                 </LabelInputContainer>
 
                 <LabelInputContainer className="mb-4">
                     <Label htmlFor="username">Username</Label>
-                    <Input id="username" placeholder="Durdy" type="text" onChange={handleChange} />
+                    <Input className="text-white" id="username" placeholder="Durdy" type="text" onChange={handleChange} />
                 </LabelInputContainer>
 
                 <LabelInputContainer className="mb-4">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" placeholder="projectmayhem@fc.com" type="email" onChange={handleChange} />
+                    <Input className="text-white" id="email" placeholder="projectmayhem@fc.com" type="email" onChange={handleChange} />
                 </LabelInputContainer>
 
                 <LabelInputContainer className="mb-4">
                     <Label htmlFor="password">Password</Label>
-                    <Input id="password" placeholder="••••••••" type="password" onChange={handleChange} />
+                    <Input className="text-white" id="password" placeholder="••••••••" type="password" onChange={handleChange} />
+                </LabelInputContainer>
+                <LabelInputContainer className="mb-4">
+                    <Label htmlFor="image">Upload Profile Image</Label>
+                    <Input className="text-white" id="media_url" placeholder="" name="media_url" type="file" onChange={(e) => setFile(e.target.files[0])} />
                 </LabelInputContainer>
 
 

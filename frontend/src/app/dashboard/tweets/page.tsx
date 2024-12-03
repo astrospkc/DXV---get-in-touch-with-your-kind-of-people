@@ -71,7 +71,7 @@ const TweetCard = () => {
     const [data, setData] = useState<Item[]>([])
     const userTweet_context = useContext(TweetContext)
     const { userTweets, getUserTweets } = userTweet_context
-    console.log("get tweets: ", userTweets)
+    // console.log("get tweets: ", userTweets)
     // handling api calls: 
     useEffect(() => {
         getUserTweets()

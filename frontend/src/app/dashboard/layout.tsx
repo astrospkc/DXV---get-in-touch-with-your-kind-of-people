@@ -33,13 +33,13 @@ export default function DashboardLayout({ children }: FormLayoutProps) {
     console.log("is authenticated in dashboard layout: ", isAuthenticated)
     return (
 
-        <div className="flex flex-col h-screen w-screen ">
+        <div className="flex flex-col h-screen w-screen justify-between">
             {/* <div className={`header ${isHidden ? 'hidden' : ''}`}> */}
             {/* <Header /> */}
             {/* </div> */}
 
             <div className="flex flex-1 flex-row overflow-y-hidden">
-                <div className="w-1/6  overflow-y-hidden "><LeftBar /></div>
+                <div className="w-1/6  overflow-y-hidden shadow-lg shadow-black"><LeftBar /></div>
                 {
                     !isAuthenticated ?
                         //  bg-gradient-to-r from-indigo-950 to-cyan-950       

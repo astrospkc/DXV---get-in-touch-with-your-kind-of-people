@@ -22,7 +22,7 @@ const tags = [
     { id: 2, tag: "Create Group", link: "/dashboard/createGroup" },
     { id: 3, tag: "Groups", link: "/dashboard/groups" },
     { id: 4, tag: "Tweets", link: "/dashboard/tweets" },
-    { id: 5, tag: "Profile", link: "/dashboard/profile" },
+    // { id: 5, tag: "Profile", link: "/dashboard/profile" },
     { id: 6, tag: "About", link: "/dashboard/about" },
     { id: 7, tag: "Notification", link: "/dashboard/notification" },
 ];
@@ -64,8 +64,8 @@ const LeftBar = () => {
     }
 
     return (
-        <div className='m-3 mx-6 flex flex-col justify-around items-center h-full text-gray-400 '>
-            <Badge className='w-fit p-4'>DXV</Badge>
+        <div className='m-3 mx-6 flex flex-col justify-around items-center h-full text-gray-400  '>
+            <div className=' p-2 londrina-shadow-regular bg-blue-200 rounded-full'>DXV</div>
             <div className='flex flex-col w-fit'>
                 {tags.map((tag) => (
                     <Link href={tag.link} key={tag.id}>
@@ -95,7 +95,7 @@ const LeftBar = () => {
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
-                            <Textarea name="content" placeholder="Type your message here." onChange={handleChange} />
+                            <Textarea className='text-white' name="content" placeholder="Type your message here." onChange={handleChange} />
                         </div>
                         <DialogFooter>
                             <Button variant="secondary" type="submit" onClick={handleSubmit}>Post</Button>
@@ -103,13 +103,12 @@ const LeftBar = () => {
                     </DialogContent>
                 </Dialog>
 
-                <div className='flex flex-row text-sm justify-center items-center mb-6'>
-                    <div className='w-full p-4 bg-black rounded-full'>Avatar</div>
-                    <div className='mx-2'>
-                        <h1>Holder Name</h1>
-                        <h1>@GroupName</h1>
-                    </div>
+                <div className='flex flex-row text-sm justify-center items-center mb-6 rounded-full p-1 bg-gradient-to-br from-blue-500 to-blue-200 hover:scale-90 hover:cursor-pointer '>
+                    <div className='w-full  p-2 bg-black rounded-full'>Avatar</div>
+
                 </div>
+
+
             </div>
         </div>
     );

@@ -9,6 +9,7 @@ import { GroupContext } from '@/context/GroupState';
 
 import AddMember from './addMember/page';
 import { ChatState } from '@/context/ChatState';
+import axios from 'axios';
 
 const CreateGroupForm = () => {
     const [selectedUser, setSelectedUser] = useState<any>([])
@@ -26,6 +27,7 @@ const CreateGroupForm = () => {
 
     });
     const { chats, setChats } = ChatState()
+    const [file, setFile] = useState("")
 
     const [groupChat, setGroupChat] = useState({
 
@@ -42,10 +44,6 @@ const CreateGroupForm = () => {
             pic: ""
         }
     })
-
-
-
-
     // console.log("user: ", user)
     let user_id;
     if (user) {
@@ -68,31 +66,33 @@ const CreateGroupForm = () => {
             users
         } = props;
         // console.log("props: ", props);
+
         try {
             const token = localStorage.getItem("token");
             console.log("token", token);
+            const formData = new FormData()
+            formData.append("group_name", group_name)
+            formData.append("groupAdminId", groupAdminId)
+            formData.append("total_members", total_members)
+            formData.append("group_media_url", file)
+            formData.append("github_url", github_url)
+            formData.append("project_desc", project_desc)
+            formData.append("users", selectedUserIds)
+
             // update data in group table
-            const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/group/createGroup`, {
-                method: "POST",
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_URL}/group/createGroup`, formData, {
+
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({
-                    group_name: group_name,
-                    groupAdminId: groupAdminId,
-                    total_members: total_members,
-                    media_url: media_url,
-                    github_url: github_url,
-                    project_desc: project_desc,
-                    users: selectedUserIds
-                }),
+
             });
 
-            if (!res.ok) {
+            if (!res.data.ok) {
                 console.log("failed to create group");
             }
-            const data = await res.json();
+            const data = await res.data;
             // console.log("the group : ", data);
             setGroups((prevGroups) => prevGroups.concat(data));
 
@@ -112,11 +112,11 @@ const CreateGroupForm = () => {
 
                 }),
             });
-            if (!res.ok) {
+            if (!response.ok) {
                 console.log("failed to create group chat");
             }
 
-            const chat_data = await response.json();
+            // const chat_data = await response.json();
             // console.log("the group : ", chat_data);
             setChats((prevGroups) => prevGroups.concat(data));
 
@@ -158,7 +158,7 @@ const CreateGroupForm = () => {
     return (
         <div className='flex flex-col p-10 justify-center items-center '>
             <h1 className='text-3xl my-4'>Create group</h1>
-            <form onSubmit={handleSubmit} className='flex flex-col gap-4  bg-blue-300 p-11 shadow-xl shadow-black rounded-xl '>
+            <form onSubmit={handleSubmit} className='flex flex-col gap-4  bg-transparent p-11 shadow-xl shadow-black rounded-xl '>
                 <div className='rounded-full'>
                     <label htmlFor="group_name" className='font-bold'>Group name <span className='text-gray-600'>(unique)</span></label>
                     <input id="group_name" value={group.group_name} name="group_name" type="text" placeholder='Group name' className='p-2 rounded-full ml-3 text-white' onChange={handleChange} />
@@ -173,7 +173,7 @@ const CreateGroupForm = () => {
                 </div>
                 <div className='rounded-full'>
                     <label htmlFor="group_media_url" className='font-bold'>Profile Pic</label>
-                    <input id="group_media_url" value={group.group_media_url} name="group_media_url" type="text" placeholder='URL to profile pic' className='p-2 rounded-full ml-3 text-white' onChange={handleChange} />
+                    <input id="group_media_url" defaultValue={group.group_media_url} name="group_media_url" type="file" placeholder='URL to profile pic' className='p-2 rounded-full ml-3 text-white' onChange={(e) => setFile(e.target.files[0])} />
                 </div>
                 <div className='rounded-full'>
                     <label htmlFor="github_url" className='font-bold'>Github Url<span className='text-gray-600'>(unique)</span></label>

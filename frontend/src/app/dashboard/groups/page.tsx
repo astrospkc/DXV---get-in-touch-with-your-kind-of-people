@@ -13,6 +13,8 @@ import {
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { group } from "console";
+import axios from "axios";
+import { Rss } from "lucide-react";
 
 
 export default function Groups() {
@@ -22,8 +24,9 @@ export default function Groups() {
     if (!group_context) {
         throw new Error("CardWithForm must be used within a GroupProvider");
     }
+    const { usergroup, setUserGroup, fetchCreatedGroups, groups, groupInfo, setGroupInfo } = group_context;
 
-    const { usergroup, fetchCreatedGroups, groups, groupInfo, setGroupInfo } = group_context;
+
     useEffect(() => {
         fetchCreatedGroups()
     }, [])
@@ -73,15 +76,15 @@ export default function Groups() {
     return (
         <>
             <div className="flex flex-row justify-center items-center m-auto my-10 ">
-                <div className=" flex-1 text-center border-r-2 border-gray-700 p-3  "><span className="bg-black p-2 rounded-3xl hover:bg-gray-900 hover:scale-100 hover:cursor-pointer">Groups Created</span></div>
-                <div className="flex-1 text-center  border-gray-700 p-3 "><span className="bg-gray-900 p-2 rounded-3xl hover:bg-black hover:scale-100 hover:cursor-pointer">Groups Joined</span></div>
+                <div className=" flex-1 text-center border-r-2 border-gray-700 p-3  "><span className="bg-yellow-500 font-bold hover:text-white p-2 rounded-3xl hover:bg-gray-900 hover:scale-100 hover:cursor-pointer">Groups Created</span></div>
+                <div className="flex-1 text-center  border-gray-700 p-3 "><span className="bg-yellow-500 p-2 font-bold hover:text-white rounded-3xl hover:bg-black hover:scale-100 hover:cursor-pointer">Groups Joined</span></div>
             </div>
             <div className="justify-center grid grid-cols-1 md:grid-cols-2 gap-4 m-3">
                 {usergroup && usergroup?.map((group) => {
                     return (
 
                         <div key={group.group_id}>
-                            <Card className="w-[350px] shadow-gray-700 shadow-xl hover:scale-95 hover:bg-gradient-to-r from-black to-slate-600">
+                            <Card className="w-[350px] shadow-black shadow-xl  hover:scale-95 hover:bg-gradient-to-r from-black to-slate-600">
                                 <CardHeader>
                                     <CardTitle>{group.group_name}</CardTitle>
                                     <CardDescription>{group.group_desc}</CardDescription>

@@ -87,6 +87,16 @@ CREATE TABLE IF NOT EXISTS "posts_table" (
 	"updated_at" timestamp NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "project_table" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"project_name" text NOT NULL,
+	"project_desc" text,
+	"project_media_url" text[],
+	"group_id" integer NOT NULL,
+	"user_id" integer NOT NULL,
+	"createdAt" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tweet_table" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"media_url" text,
@@ -189,6 +199,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "posts_table" ADD CONSTRAINT "posts_table_user_id_users_table_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users_table"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "project_table" ADD CONSTRAINT "project_table_group_id_group_table_group_id_fk" FOREIGN KEY ("group_id") REFERENCES "public"."group_table"("group_id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "project_table" ADD CONSTRAINT "project_table_user_id_users_table_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users_table"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

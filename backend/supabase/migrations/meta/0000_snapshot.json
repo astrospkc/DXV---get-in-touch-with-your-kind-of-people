@@ -1,5 +1,5 @@
 {
-  "id": "b4f79491-4670-43be-8d84-db800ba14877",
+  "id": "0688adad-148b-4abb-b1ba-028e386f6556",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -667,6 +667,86 @@
             "id"
           ],
           "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.project_table": {
+      "name": "project_table",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "project_name": {
+          "name": "project_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "project_desc": {
+          "name": "project_desc",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "project_media_url": {
+          "name": "project_media_url",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "project_table_group_id_group_table_group_id_fk": {
+          "name": "project_table_group_id_group_table_group_id_fk",
+          "tableFrom": "project_table",
+          "tableTo": "group_table",
+          "columnsFrom": [
+            "group_id"
+          ],
+          "columnsTo": [
+            "group_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "project_table_user_id_users_table_id_fk": {
+          "name": "project_table_user_id_users_table_id_fk",
+          "tableFrom": "project_table",
+          "tableTo": "users_table",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },

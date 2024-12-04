@@ -19,6 +19,7 @@ const uploadOnCLoudinary = async (localFilePath: any) => {
             resource_type: "auto",
         });
         console.log("file uploaded on cloudinary ", uploadResult.url);
+        fs.unlink(localFilePath, () => console.log("file deleted from working directory"));
         return uploadResult;
     } catch (error) {
         fs.unlink(localFilePath, () => console.log("file got deleted")); // removing the locally saved file as the operation got failed

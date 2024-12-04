@@ -9,6 +9,8 @@ import postsTable from './posts';
 import tweetTable from './tweet';
 import usersTable from "./users"
 import connectionTable from './connection';
+import projectTable from "./projectFile"
+import { pgTable } from 'drizzle-orm/pg-core';
 
 export { default as usersTable } from "./users"
 export { default as tweetTable } from "./tweet"
@@ -20,6 +22,7 @@ export { default as like } from "./like"
 export { default as notification } from "./notification"
 export { default as postsTable } from "./posts"
 export { default as connectionTable } from "./connection"
+export { default as projectTable } from "./projectFile"
 
 
 export { default as message, messageRelations } from "./message"
@@ -57,3 +60,6 @@ export type SelectNotification = typeof notification.$inferSelect;
 
 export type InsertConnection = typeof connectionTable.$inferInsert;
 export type SelectConnection = typeof connectionTable.$inferSelect;
+
+export type InsertProject = typeof projectTable.$inferInsert;
+export type SelectProject = typeof projectTable.$inferSelect;

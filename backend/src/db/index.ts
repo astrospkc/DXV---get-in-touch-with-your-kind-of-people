@@ -8,6 +8,8 @@ import groupMemberRouter from "../routes/groupMemberRoute"
 import chatRouter from "../routes/chat"
 import messageRouter from "../routes/message"
 import connectionRouter from "../routes/connection"
+
+import projectRouter from "../routes/projectFile"
 import { Server } from "socket.io";
 import cors from 'cors';
 
@@ -45,6 +47,9 @@ app.use("/message", messageRouter)
 
 // router-8 -->connection
 app.use("/connection", connectionRouter)
+
+// router-9 --> project
+app.use("/project", projectRouter)
 
 
 app.get("/", async (req, res) => {

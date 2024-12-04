@@ -55,7 +55,7 @@ async function createGroups(req: express.Request, res: express.Response) {
             // usersInfo: users_details
         }
     );
-    console.log("group:", group)
+    // console.log("group:", group)
     res.json(group);
 
 

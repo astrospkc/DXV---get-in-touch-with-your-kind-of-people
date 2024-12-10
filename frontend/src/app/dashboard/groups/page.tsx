@@ -37,8 +37,8 @@ export default function Groups() {
 
     const handleOpen = (grp_name: string) => {
         let data;
-        console.log("group name: ", grp_name)
-        console.log("groups: ", usergroup)
+        // console.log("group name: ", grp_name)
+        // console.log("groups: ", usergroup)
 
         if (groups) {
             for (let group of usergroup) {
@@ -64,7 +64,7 @@ export default function Groups() {
 
 
     const handleGroupData = (info) => {
-        console.log("info: ", info)
+        // console.log("info: ", info)
         setGroupInfo(info)
     }
 

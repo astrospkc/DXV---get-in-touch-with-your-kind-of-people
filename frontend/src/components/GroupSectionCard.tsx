@@ -24,7 +24,7 @@ const GroupSectionCard = () => {
     }, []);
 
     console.log("all groups", allGroups)
-    console.log("name ", userNames)
+    // console.log("name ", userNames)
 
     const handleClick = () => {
         console.log("handle clikc")

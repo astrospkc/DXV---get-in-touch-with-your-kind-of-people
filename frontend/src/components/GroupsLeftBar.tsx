@@ -51,7 +51,7 @@ const GroupsLeftBar = () => {
                         Chats
                     </Badge>
                 </Link>
-                <Link href="" >
+                <Link href="/groupsDashboard/projectPage" >
                     <Badge className='my-3 bg-slate-500 text-white p-2 hover:cursor-pointer hover:scale-125'>
                         Project Material
                     </Badge>
@@ -77,9 +77,6 @@ const GroupsLeftBar = () => {
                 <Link href="/dashboard">
                     <Button variant="outline" className='my-4'>Dashboard</Button>
                 </Link>
-
-
-
             </div>
 
         </div>

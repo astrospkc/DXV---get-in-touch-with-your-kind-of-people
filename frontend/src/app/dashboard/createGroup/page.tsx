@@ -161,15 +161,15 @@ const CreateGroupForm = () => {
             <form onSubmit={handleSubmit} className='flex flex-col gap-4  bg-transparent p-11 shadow-xl shadow-black rounded-xl '>
                 <div className='rounded-full'>
                     <label htmlFor="group_name" className='font-bold'>Group name <span className='text-gray-600'>(unique)</span></label>
-                    <input id="group_name" value={group.group_name} name="group_name" type="text" placeholder='Group name' className='p-2 rounded-full ml-3 text-white' onChange={handleChange} />
+                    <input id="group_name" defaultValue={group.group_name} name="group_name" type="text" placeholder='Group name' className='p-2 rounded-full ml-3 text-white' onChange={handleChange} />
                 </div>
                 <div className='rounded-full'>
                     <label htmlFor="group_adminId" className='font-bold'>Group Admin Id</label>
-                    <input id="group_adminId" value={group.group_adminId} name="group_adminId" type="number" placeholder={user_id} className='p-2 rounded-full ml-3 text-white' value={user_id} readOnly />
+                    <input id="group_adminId" defaultValue={group.group_adminId} name="group_adminId" type="number" placeholder={user_id} className='p-2 rounded-full ml-3 text-white' value={user_id} readOnly />
                 </div>
                 <div className='rounded-full'>
                     <label htmlFor="total_members" className='font-bold'>Total Members</label>
-                    <input id="total_members" value={group.total_members} name="total_members" type="text" placeholder='2' className='p-2 rounded-full ml-3 text-white' onChange={handleChange} />
+                    <input id="total_members" defaultValue={group.total_members} name="total_members" type="text" placeholder='2' className='p-2 rounded-full ml-3 text-white' onChange={handleChange} />
                 </div>
                 <div className='rounded-full'>
                     <label htmlFor="group_media_url" className='font-bold'>Profile Pic</label>
@@ -177,7 +177,7 @@ const CreateGroupForm = () => {
                 </div>
                 <div className='rounded-full'>
                     <label htmlFor="github_url" className='font-bold'>Github Url<span className='text-gray-600'>(unique)</span></label>
-                    <input id="github_url" value={group.github_url} name="github_url" type="text" placeholder="https://github.com/astro/DXV" className='p-2 rounded-full ml-3 text-white' onChange={handleChange} />
+                    <input id="github_url" defaultValue={group.github_url} name="github_url" type="text" placeholder="https://github.com/astro/DXV" className='p-2 rounded-full ml-3 text-white' onChange={handleChange} />
                 </div>
                 <div className='rounded-full flex flex-col'>
                     <label htmlFor="project_desc" className='font-bold'>Description</label>
